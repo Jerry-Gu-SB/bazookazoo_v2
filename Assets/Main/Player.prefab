@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3166026034033551914}
   - component: {fileID: 2893087368998743409}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 8782664332989165330}
   - component: {fileID: 9078172832433202988}
   m_Layer: 0
-  m_Name: Triangle
+  m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -282,9 +282,11 @@ GameObject:
   - component: {fileID: -3598226789266093429}
   - component: {fileID: 3288366715517346822}
   - component: {fileID: 8339178639939620055}
+  - component: {fileID: 8559837278658081489}
   - component: {fileID: 4485901705274282035}
   - component: {fileID: 3866731337991339739}
   - component: {fileID: -7139055139141798863}
+  - component: {fileID: -5405329769026983755}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -451,6 +453,23 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &8559837278658081489
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7198013069251009078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkRigidbodyBaseExpanded: 0
+  UseRigidBodyForMotion: 0
+  AutoUpdateKinematicState: 1
+  AutoSetKinematicOnDespawn: 1
 --- !u!114 &4485901705274282035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,3 +543,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &-5405329769026983755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7198013069251009078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ed2486fd44b69d4895f1daaf97354c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  rocketPrefab: {fileID: 5069905066010568923, guid: 03c5d9eb4c552ce4fa0baeb71754f583, type: 3}
+  firePoint: {fileID: 8782664332989165330}
