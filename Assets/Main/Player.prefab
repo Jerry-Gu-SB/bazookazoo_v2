@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 3866731337991339739}
   - component: {fileID: -7139055139141798863}
   - component: {fileID: -5405329769026983755}
+  - component: {fileID: 8353948206212510349}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -467,7 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 0
+  UseRigidBodyForMotion: 1
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
 --- !u!114 &4485901705274282035
@@ -499,10 +500,10 @@ MonoBehaviour:
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
-  SyncPositionZ: 0
-  SyncRotAngleX: 0
-  SyncRotAngleY: 0
-  SyncRotAngleZ: 0
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
   SyncScaleX: 0
   SyncScaleY: 0
   SyncScaleZ: 0
@@ -514,7 +515,7 @@ MonoBehaviour:
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
   SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
+  Interpolate: 0
   SlerpPosition: 0
 --- !u!114 &3866731337991339739
 MonoBehaviour:
@@ -530,6 +531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   speed: 5
+  rb: {fileID: -3598226789266093429}
 --- !u!114 &-7139055139141798863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -558,3 +560,17 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   rocketPrefab: {fileID: 5069905066010568923, guid: 03c5d9eb4c552ce4fa0baeb71754f583, type: 3}
   firePoint: {fileID: 8782664332989165330}
+--- !u!114 &8353948206212510349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7198013069251009078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e87cbc2fb7491394e87eeee64fea84f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  playerHeath: 100
