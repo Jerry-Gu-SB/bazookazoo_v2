@@ -14,7 +14,7 @@ namespace Main.Scripts
         
         private Rigidbody2D _rb;
         private SpriteRenderer _renderer;
-        private bool exploded = false;
+        private bool _exploded = false;
         
         private void Start()
         {
@@ -31,7 +31,7 @@ namespace Main.Scripts
                 
                 if (collision.CompareTag("Player"))
                 {
-                    if (!exploded)
+                    if (!_exploded)
                     {
                         PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
                         collisionPlayerManager.playerHeath -= rocketDamage;
@@ -57,7 +57,7 @@ namespace Main.Scripts
 
         private IEnumerator Explode()
         {
-            exploded = true;
+            _exploded = true;
             _renderer.enabled = false;
             yield return new WaitForSeconds(.05f);
             if (IsServer)
