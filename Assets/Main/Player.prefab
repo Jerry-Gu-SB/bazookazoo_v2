@@ -531,7 +531,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   speed: 5
-  rb: {fileID: -3598226789266093429}
 --- !u!114 &-7139055139141798863
 MonoBehaviour:
   m_ObjectHideFlags: 0

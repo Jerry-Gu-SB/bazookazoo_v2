@@ -8,7 +8,7 @@ namespace Main.Scripts
         public GameObject rocketPrefab;
         public Transform firePoint;
 
-        void Update()
+        private void Update()
         {
             if (!IsOwner) return;
 
@@ -19,14 +19,14 @@ namespace Main.Scripts
         }
 
         [ServerRpc]
-        void FireRocketServerRpc(Vector3 position, Quaternion rotation)
+        private void FireRocketServerRpc(Vector3 position, Quaternion rotation)
         {
             GameObject rocket = Instantiate(rocketPrefab, position, rotation);
             NetworkObject netObj = rocket.GetComponent<NetworkObject>();
             netObj.Spawn(true);
 
             RocketProjectile rp = rocket.GetComponent<RocketProjectile>();
-            rp.owner = this.gameObject;
+            rp.ownerId.Value = this.GetComponent<NetworkObject>().NetworkObjectId;
         }
     }
 }

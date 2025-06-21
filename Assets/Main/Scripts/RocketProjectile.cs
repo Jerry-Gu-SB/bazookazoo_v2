@@ -14,6 +14,8 @@ namespace Main.Scripts
 
         public CircleCollider2D explosionHitbox;
         
+        public NetworkVariable<ulong> ownerId;
+        
         [HideInInspector] public GameObject owner;
 
         private Rigidbody2D _rb;
@@ -26,19 +28,20 @@ namespace Main.Scripts
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            
-            
-            if (collision.gameObject == owner) return;
-
-            if (collision.CompareTag("Player") && collision.gameObject != owner)
+            if (collision.TryGetComponent(out NetworkObject otherNetObj))
             {
-                PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
-                collisionPlayerManager.playerHeath -= rocketDamage;
+                if (otherNetObj.NetworkObjectId == ownerId.Value) return;  // Don't collide with rocket owner
                 
-                Rigidbody2D collisionRigidBody2D = collision.GetComponent<Rigidbody2D>();
-                collisionRigidBody2D.AddForce(transform.right * rocketKnockBack, ForceMode2D.Impulse);
+                if (collision.CompareTag("Player"))
+                {
+                    PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
+                    collisionPlayerManager.playerHeath -= rocketDamage;
+                
+                    Rigidbody2D collisionRigidBody2D = collision.GetComponent<Rigidbody2D>();
+                    collisionRigidBody2D.AddForce(transform.right * rocketKnockBack, ForceMode2D.Impulse);
 
-                StartCoroutine(Explode());
+                    StartCoroutine(Explode());
+                }
             }
 
             if (collision.gameObject.layer == LayerMask.NameToLayer("Terrain"))
@@ -54,7 +57,7 @@ namespace Main.Scripts
 
         private IEnumerator Explode()
         {
-            yield return new WaitForSeconds(.02f);
+            yield return new WaitForSeconds(.01f);
             if (IsServer)
             {
                 Destroy(gameObject);
