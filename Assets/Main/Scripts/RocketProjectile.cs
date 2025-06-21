@@ -7,22 +7,19 @@ namespace Main.Scripts
     public class RocketProjectile : NetworkBehaviour
     {
         public float speed = 20f;
-        [SerializeField]
-        private int rocketDamage = 20;
-        [SerializeField]
-        private int rocketKnockBack = 40;
-
-        public CircleCollider2D explosionHitbox;
-        
         public NetworkVariable<ulong> ownerId;
-        
-        [HideInInspector] public GameObject owner;
 
+        public int rocketDamage = 20;
+        public int rocketKnockBack = 40;
+        
         private Rigidbody2D _rb;
+        private SpriteRenderer _renderer;
+        private bool exploded = false;
         
         private void Start()
         {
             _rb = GetComponent<Rigidbody2D>();
+            _renderer = GetComponent<SpriteRenderer>();
             _rb.linearVelocity = transform.right * speed;
         }
 
@@ -34,12 +31,15 @@ namespace Main.Scripts
                 
                 if (collision.CompareTag("Player"))
                 {
-                    PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
-                    collisionPlayerManager.playerHeath -= rocketDamage;
+                    if (!exploded)
+                    {
+                        PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
+                        collisionPlayerManager.playerHeath -= rocketDamage;
                 
-                    Rigidbody2D collisionRigidBody2D = collision.GetComponent<Rigidbody2D>();
-                    collisionRigidBody2D.AddForce(transform.right * rocketKnockBack, ForceMode2D.Impulse);
-
+                        Rigidbody2D collisionRigidBody2D = collision.GetComponent<Rigidbody2D>();
+                        collisionRigidBody2D.AddForce(transform.right * rocketKnockBack, ForceMode2D.Impulse);
+                    }
+                    
                     StartCoroutine(Explode());
                 }
             }
@@ -57,7 +57,9 @@ namespace Main.Scripts
 
         private IEnumerator Explode()
         {
-            yield return new WaitForSeconds(.01f);
+            exploded = true;
+            _renderer.enabled = false;
+            yield return new WaitForSeconds(.05f);
             if (IsServer)
             {
                 Destroy(gameObject);
