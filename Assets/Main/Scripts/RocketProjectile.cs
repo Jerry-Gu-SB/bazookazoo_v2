@@ -6,13 +6,15 @@ namespace Main.Scripts
 {
     public class RocketProjectile : NetworkBehaviour
     {
-        public float speed = 20f;
         public NetworkVariable<ulong> ownerId;
 
+        [Header("Rocket properties")]
+        public float speed = 20f;
         public int selfRocketDamage = 20;
         public int enemyRocketDamage = 40;
         public int rocketKnockBack = 40;
-        
+        public float explosionRadius = 3f;
+
         private Rigidbody2D _rb;
         private SpriteRenderer _renderer;
         private bool _exploded = false;
@@ -58,7 +60,6 @@ namespace Main.Scripts
             _exploded = true;
             _renderer.enabled = false;
 
-            float explosionRadius = 3f;
             Vector2 explosionCenter = transform.position;
 
             Collider2D[] hits = Physics2D.OverlapCircleAll(explosionCenter, explosionRadius, LayerMask.GetMask("Player"));
@@ -68,7 +69,6 @@ namespace Main.Scripts
                 if (!hit.TryGetComponent(out NetworkObject netObj)) continue;
                 if (!hit.CompareTag("Player")) continue;
 
-                // Apply knockback force
                 Rigidbody2D rb2d = hit.GetComponent<Rigidbody2D>();
                 if (!rb2d) continue;
 
@@ -77,22 +77,14 @@ namespace Main.Scripts
                 var forceFactor = 1 - (distance / explosionRadius);
                 var finalForce = rocketKnockBack * forceFactor;
                 
-                // Apply damage
                 PlayerManager playerManager = hit.GetComponent<PlayerManager>();
-                playerManager.playerHeath -= enemyRocketDamage * forceFactor;
-
+                playerManager.playerHeath -= enemyRocketDamage * forceFactor;  // TODO: tune these numbers
+                
                 rb2d.AddForce(direction * finalForce, ForceMode2D.Impulse);
             }
-
-
             yield return new WaitForSeconds(.05f);
-            if (IsServer)
-            {
-                Destroy(gameObject);
-            }
-
-
+            
+            if (IsServer) Destroy(gameObject);
         }
-
     }
 }
