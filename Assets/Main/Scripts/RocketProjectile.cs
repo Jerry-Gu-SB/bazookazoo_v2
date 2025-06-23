@@ -12,7 +12,8 @@ namespace Main.Scripts
         public float speed = 20f;
         public int selfRocketDamage = 20;
         public int enemyRocketDamage = 40;
-        public int rocketKnockBack = 40;
+        public int rocketMinKnockBack = 5;
+        public int rocketMaxKnockBack = 40;
         public float explosionRadius = 3f;
 
         private Rigidbody2D _rb;
@@ -28,27 +29,24 @@ namespace Main.Scripts
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            if (_exploded) return;
             if (collision.TryGetComponent(out NetworkObject otherNetObj))
             {
-                if (otherNetObj.NetworkObjectId == ownerId.Value) return;  // Don't collide with rocket owner
-                
-                if (collision.CompareTag("Player"))
+                if (collision.CompareTag("Player") && otherNetObj.NetworkObjectId != ownerId.Value)
                 {
-                    if (!_exploded)
-                    {
-                        PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
-                        collisionPlayerManager.playerHeath -= selfRocketDamage;
-                    }
+                    PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
+                    collisionPlayerManager.playerHeath -= selfRocketDamage;
+
+                    Rigidbody2D enemyRigidBody2D = collision.GetComponent<Rigidbody2D>();
+                    enemyRigidBody2D.AddForce(transform.right * rocketMaxKnockBack, ForceMode2D.Impulse);
                     
                     StartCoroutine(Explode());
                 }
             }
-
             if (collision.gameObject.layer == LayerMask.NameToLayer("Terrain"))
             {
                 StartCoroutine(Explode());
             }
-
             if (collision.GetComponent<RocketProjectile>())
             {
                 StartCoroutine(Explode());
@@ -68,19 +66,17 @@ namespace Main.Scripts
             {
                 if (!hit.TryGetComponent(out NetworkObject netObj)) continue;
                 if (!hit.CompareTag("Player")) continue;
-
                 Rigidbody2D rb2d = hit.GetComponent<Rigidbody2D>();
                 if (!rb2d) continue;
 
                 Vector2 direction = (hit.transform.position - transform.position).normalized;
                 var distance = Vector2.Distance(hit.transform.position, transform.position);
                 var forceFactor = 1 - (distance / explosionRadius);
-                var finalForce = rocketKnockBack * forceFactor;
+                var finalForce = Mathf.Lerp(rocketMinKnockBack, rocketMaxKnockBack, forceFactor);
+                rb2d.AddForce(direction * finalForce, ForceMode2D.Impulse);
                 
                 PlayerManager playerManager = hit.GetComponent<PlayerManager>();
-                playerManager.playerHeath -= enemyRocketDamage * forceFactor;  // TODO: tune these numbers
-                
-                rb2d.AddForce(direction * finalForce, ForceMode2D.Impulse);
+                playerManager.playerHeath -= enemyRocketDamage * forceFactor;  // TODO: add a min/max for these
             }
             yield return new WaitForSeconds(.05f);
             

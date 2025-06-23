@@ -195,11 +195,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  ownerId:
+    m_InternalValue: 0
   speed: 20
-  rocketDamage: 20
-  rocketKnockBack: 40
-  explosionHitbox: {fileID: 5004578985870795187}
-  owner: {fileID: 0}
+  selfRocketDamage: 20
+  enemyRocketDamage: 40
+  rocketMinKnockBack: 5
+  rocketMaxKnockBack: 40
+  explosionRadius: 3
 --- !u!50 &988576666371611504
 Rigidbody2D:
   serializedVersion: 5

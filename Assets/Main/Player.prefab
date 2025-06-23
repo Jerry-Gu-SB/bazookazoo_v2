@@ -639,8 +639,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cebf9ba291bcf334e968266db5c4147a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  speed: 5
+  moveForce: 30
+  maxControlSpeed: 10
+  controlInAirMultiplier: 0.75
+  fallingMultiplier: 15
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!114 &-7139055139141798863
 MonoBehaviour:
   m_ObjectHideFlags: 0
