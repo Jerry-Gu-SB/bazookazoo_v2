@@ -76,7 +76,7 @@ namespace Main.Scripts
                 rb2d.AddForce(direction * finalForce, ForceMode2D.Impulse);
                 
                 PlayerManager playerManager = hit.GetComponent<PlayerManager>();
-                playerManager.playerHeath -= enemyRocketDamage * forceFactor;  // TODO: add a min/max for these
+                playerManager.playerHeath -= enemyRocketDamage * forceFactor;  // TODO: add a min/max clamp for these
             }
             yield return new WaitForSeconds(.05f);
             
