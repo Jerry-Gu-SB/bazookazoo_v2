@@ -9,7 +9,8 @@ namespace Main.Scripts
         public float speed = 20f;
         public NetworkVariable<ulong> ownerId;
 
-        public int rocketDamage = 20;
+        public int selfRocketDamage = 20;
+        public int enemyRocketDamage = 40;
         public int rocketKnockBack = 40;
         
         private Rigidbody2D _rb;
@@ -34,10 +35,7 @@ namespace Main.Scripts
                     if (!_exploded)
                     {
                         PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
-                        collisionPlayerManager.playerHeath -= rocketDamage;
-                
-                        Rigidbody2D collisionRigidBody2D = collision.GetComponent<Rigidbody2D>();
-                        collisionRigidBody2D.AddForce(transform.right * rocketKnockBack, ForceMode2D.Impulse);
+                        collisionPlayerManager.playerHeath -= selfRocketDamage;
                     }
                     
                     StartCoroutine(Explode());
@@ -59,12 +57,42 @@ namespace Main.Scripts
         {
             _exploded = true;
             _renderer.enabled = false;
+
+            float explosionRadius = 3f;
+            Vector2 explosionCenter = transform.position;
+
+            Collider2D[] hits = Physics2D.OverlapCircleAll(explosionCenter, explosionRadius, LayerMask.GetMask("Player"));
+
+            foreach (Collider2D hit in hits)
+            {
+                if (!hit.TryGetComponent(out NetworkObject netObj)) continue;
+                if (!hit.CompareTag("Player")) continue;
+
+                // Apply knockback force
+                Rigidbody2D rb2d = hit.GetComponent<Rigidbody2D>();
+                if (!rb2d) continue;
+
+                Vector2 direction = (hit.transform.position - transform.position).normalized;
+                var distance = Vector2.Distance(hit.transform.position, transform.position);
+                var forceFactor = 1 - (distance / explosionRadius);
+                var finalForce = rocketKnockBack * forceFactor;
+                
+                // Apply damage
+                PlayerManager playerManager = hit.GetComponent<PlayerManager>();
+                playerManager.playerHeath -= enemyRocketDamage * forceFactor;
+
+                rb2d.AddForce(direction * finalForce, ForceMode2D.Impulse);
+            }
+
+
             yield return new WaitForSeconds(.05f);
             if (IsServer)
             {
                 Destroy(gameObject);
             }
-            
+
+
         }
+
     }
 }

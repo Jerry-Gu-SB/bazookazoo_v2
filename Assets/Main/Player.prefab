@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5337178680470969456}
   - component: {fileID: 8693403326840422537}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CinemachineCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -85,7 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3166026034033551914}
   - component: {fileID: 2893087368998743409}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8782664332989165330}
   - component: {fileID: 9078172832433202988}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FirePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 4115024444756888119}
   - component: {fileID: 1983976377344010456}
   - component: {fileID: 4685891210297396206}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BazookaContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -353,7 +353,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6117638913807867932}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CameraSocket
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -397,7 +397,7 @@ GameObject:
   - component: {fileID: -5405329769026983755}
   - component: {fileID: 8353948206212510349}
   - component: {fileID: 8080339556998315006}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -709,7 +709,7 @@ GameObject:
   - component: {fileID: 6577862425084711139}
   - component: {fileID: 3156173130638155791}
   - component: {fileID: 3625027270771678294}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}

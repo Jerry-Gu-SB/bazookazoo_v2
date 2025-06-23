@@ -5,18 +5,12 @@ namespace Main.Scripts
 {
     public class PlayerManager : NetworkBehaviour
     {
-        public int playerHeath;
+        public float playerHeath;
         
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            playerHeath = 100;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            playerHeath = 100f;
         }
     }
 }
