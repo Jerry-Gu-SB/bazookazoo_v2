@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Main.Scripts
+namespace Main.Scripts.Player
 {
     [RequireComponent(typeof(Renderer))]
     public class SetPlayerColor : NetworkBehaviour

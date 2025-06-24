@@ -1,21 +1,24 @@
-using Unity.Netcode;
 using Unity.Cinemachine;
+using Unity.Netcode;
 
-public class PlayerCameraController : NetworkBehaviour
+namespace Main.Scripts.Player
 {
-    public CinemachineCamera virtualCamera;
-
-    private void Start()
+    public class PlayerCameraController : NetworkBehaviour
     {
-        if (IsOwner)
+        public CinemachineCamera virtualCamera;
+
+        private void Start()
         {
-            virtualCamera.Priority = 10;
-            virtualCamera.gameObject.SetActive(true);
-        }
-        else
-        {
-            virtualCamera.Priority = 0;
-            virtualCamera.gameObject.SetActive(false);
+            if (IsOwner)
+            {
+                virtualCamera.Priority = 10;
+                virtualCamera.gameObject.SetActive(true);
+            }
+            else
+            {
+                virtualCamera.Priority = 0;
+                virtualCamera.gameObject.SetActive(false);
+            }
         }
     }
 }

@@ -6,14 +6,12 @@ using UnityEngine.UI;
 
 namespace Main.Scripts
 {
-    public class UIManager : MonoBehaviour
+    public class NetworkUIManager : MonoBehaviour
     {
-        [SerializeField] 
-        private Button startHostButton;
-        [SerializeField] 
-        private Button startClientButton;
         [SerializeField]
-        private Text healthText;
+        private Button startHostButton;
+        [SerializeField]
+        private Button startClientButton;
         private void Awake()
         {
             if (FindAnyObjectByType<EventSystem>()) return;
