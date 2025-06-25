@@ -69,7 +69,6 @@ namespace Main.Scripts
                 if (!hit.CompareTag("Player")) continue;
                 Rigidbody2D rb2d = hit.GetComponent<Rigidbody2D>();
                 if (!rb2d) continue;
-                if (netObj.NetworkObjectId != ownerId.Value) continue;
 
                 Vector2 direction = (hit.transform.position - transform.position).normalized;
                 var distance = Vector2.Distance(hit.transform.position, transform.position);
