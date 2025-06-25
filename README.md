@@ -2,7 +2,7 @@
 
 Features to implement:
 
-- connecting via LAN and IPv4 address
+- ~~connecting via LAN and IPv4 address~~
   - do via a start menu
   - choose a name and have it hover above the player
 - health packs
