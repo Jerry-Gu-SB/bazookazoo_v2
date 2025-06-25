@@ -1,1 +1,18 @@
 # bazookazoo_PROTOTYPE_MK2
+
+Features to implement:
+
+- connecting via LAN and IPv4 address
+  - do via a start menu
+  - choose a name and have it hover above the player
+- health packs
+- respawning
+  - random is probably good enough. if you get spawn killed who cares.
+  - need a death screen
+- win conditions
+  - First to X kills
+  - scoreboard
+- map design
+  - maybe different terrains. nothing crazy though.
+- some different weapons
+- some basic art
