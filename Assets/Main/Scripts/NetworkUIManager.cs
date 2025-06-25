@@ -41,8 +41,8 @@ namespace Main.Scripts
 
         private void DeactivateButtons()
         {
-            startHostButton.interactable = false;
-            startClientButton.interactable = false;
+            startClientButton.gameObject.SetActive(false);
+            startHostButton.gameObject.SetActive(false);
         }
     }
 }
