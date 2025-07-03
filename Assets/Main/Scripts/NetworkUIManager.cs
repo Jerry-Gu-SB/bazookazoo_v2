@@ -7,16 +7,22 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 namespace Main.Scripts
 {
     public class NetworkUIManager : MonoBehaviour
     {
+        [Header("Connection UI Elements")]
         [SerializeField] private Button startHostButton;
         [SerializeField] private Button startClientButton;
         [SerializeField] private TMP_InputField ipAddressInputField;
         [SerializeField] private TMP_InputField portInputField;
         [SerializeField] private TMP_Text localIPDisplayText;
+        
+        [Header("Map Selection UI Elements")]
+        [SerializeField] private TMP_Text selectMapText;
+        [SerializeField] private Button dustyButton;
 
         private UnityTransport _transport;
 
@@ -26,6 +32,9 @@ namespace Main.Scripts
             Type inputType = typeof(StandaloneInputModule);
             GameObject eventSystem = new GameObject("EventSystem", typeof(EventSystem), inputType);
             eventSystem.transform.SetParent(transform);
+            
+            ActivateConnectingUI();
+            DeactivateMapSelectionUI();
         }
 
         private void Start()
@@ -34,7 +43,8 @@ namespace Main.Scripts
 
             startHostButton.onClick.AddListener(StartHost);
             startClientButton.onClick.AddListener(StartClient);
-
+            dustyButton.onClick.AddListener(LoadDustyScene);
+            
             DisplayLocalIPAddress();
         }
 
@@ -57,23 +67,74 @@ namespace Main.Scripts
         {
             ApplyConnectionData();
             NetworkManager.Singleton.StartClient();
-            DeactivateUI();
+            DeactivateConnectingUI();
         }
 
         private void StartHost()
         {
             ApplyConnectionData();
             NetworkManager.Singleton.StartHost();
-            DeactivateUI();
+            NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Additive);
+            DeactivateConnectingUI();
+            ActivateMapSelectionUI();
         }
+        
+        // TODO: use a private string variable and have the buttons just alter this and call this method but with an 
+        // altered "dustySceneName" variable so it can be more DRY. also learn wtf this even means
+        private void LoadDustyScene()
+        {
+            var dustySceneName = "Dusty";
+            var lobbyScene = SceneManager.GetSceneByName("Lobby");
 
-        private void DeactivateUI()
+            NetworkManager.Singleton.SceneManager.OnSceneEvent += OnSceneEvent;
+
+            NetworkManager.Singleton.SceneManager.LoadScene(dustySceneName, LoadSceneMode.Additive);
+            return;
+
+            void OnSceneEvent(SceneEvent sceneEvent)
+            {
+                if (sceneEvent.SceneName != dustySceneName ||
+                    sceneEvent.SceneEventType != SceneEventType.LoadComplete) return;
+                
+                if (lobbyScene.IsValid())
+                {
+                    NetworkManager.Singleton.SceneManager.UnloadScene(lobbyScene);
+                }
+
+                NetworkManager.Singleton.SceneManager.OnSceneEvent -= OnSceneEvent;
+
+                DeactivateMapSelectionUI();
+            }
+        }
+        
+        private void ActivateConnectingUI()
+        {
+            startClientButton.gameObject.SetActive(true);
+            startHostButton.gameObject.SetActive(true);
+            ipAddressInputField.gameObject.SetActive(true);
+            portInputField.gameObject.SetActive(true);
+            localIPDisplayText.gameObject.SetActive(true);
+            
+        }
+        private void DeactivateConnectingUI()
         {
             startClientButton.gameObject.SetActive(false);
             startHostButton.gameObject.SetActive(false);
             ipAddressInputField.gameObject.SetActive(false);
             portInputField.gameObject.SetActive(false);
             localIPDisplayText.gameObject.SetActive(false);
+        }
+
+        private void ActivateMapSelectionUI()
+        {
+            selectMapText.gameObject.SetActive(true);
+            dustyButton.gameObject.SetActive(true);
+        }
+
+        private void DeactivateMapSelectionUI()
+        {
+            selectMapText.gameObject.SetActive(false);
+            dustyButton.gameObject.SetActive(false);
         }
 
         private void DisplayLocalIPAddress()
