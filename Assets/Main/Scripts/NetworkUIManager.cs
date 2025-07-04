@@ -43,7 +43,7 @@ namespace Main.Scripts
 
             startHostButton.onClick.AddListener(StartHost);
             startClientButton.onClick.AddListener(StartClient);
-            dustyButton.onClick.AddListener(LoadDustyScene);
+            dustyButton.onClick.AddListener(() => LoadMapFromLobby("Dusty"));
             
             DisplayLocalIPAddress();
         }
@@ -79,21 +79,18 @@ namespace Main.Scripts
             ActivateMapSelectionUI();
         }
         
-        // TODO: use a private string variable and have the buttons just alter this and call this method but with an 
-        // altered "dustySceneName" variable so it can be more DRY. also learn wtf this even means
-        private void LoadDustyScene()
+        private void LoadMapFromLobby(string mapSceneName)
         {
-            var dustySceneName = "Dusty";
-            var lobbyScene = SceneManager.GetSceneByName("Lobby");
+            Scene lobbyScene = SceneManager.GetSceneByName("Lobby");
 
             NetworkManager.Singleton.SceneManager.OnSceneEvent += OnSceneEvent;
-
-            NetworkManager.Singleton.SceneManager.LoadScene(dustySceneName, LoadSceneMode.Additive);
+            NetworkManager.Singleton.SceneManager.LoadScene(mapSceneName, LoadSceneMode.Additive);
             return;
-
+            
+            // Checks if we have finished loading into the actual map unloads the lobby
             void OnSceneEvent(SceneEvent sceneEvent)
             {
-                if (sceneEvent.SceneName != dustySceneName ||
+                if (sceneEvent.SceneName != mapSceneName ||
                     sceneEvent.SceneEventType != SceneEventType.LoadComplete) return;
                 
                 if (lobbyScene.IsValid())
