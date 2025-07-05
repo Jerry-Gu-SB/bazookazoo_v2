@@ -29,7 +29,7 @@ namespace Main.Scripts.Player
             }
         }
 
-        private void Respawn()
+        public void Respawn()
         {
             playerRigidbody2D.linearVelocity = Vector2.zero;
             playerHeath = 100f;
