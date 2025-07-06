@@ -21,7 +21,7 @@ namespace Main.Scripts.Player
             if (_respawn == null)
                 _respawn = new UnityEvent();
 
-            _respawn.AddListener(RespawnServerRpc);
+            _respawn.AddListener(Respawn);
         }
 
         private void Start()
@@ -35,12 +35,11 @@ namespace Main.Scripts.Player
             
             if (playerHeath <= 0)
             {
-                RespawnServerRpc();
+                Respawn();
             }
         }
         
-        [ServerRpc]
-        private void RespawnServerRpc()
+        private void Respawn()
         {
             StartCoroutine(WaitForSpawnerAndRespawn());
         }
