@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Main.Scripts
+namespace Main.Scripts.Game_Managers
 {
     public class SceneLoadingManager : NetworkBehaviour
     {

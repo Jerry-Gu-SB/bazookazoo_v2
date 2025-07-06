@@ -1,14 +1,14 @@
 using System;
 using System.Linq;
 using System.Net;
+using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using TMPro;
 
-namespace Main.Scripts
+namespace Main.Scripts.Game_Managers
 {
     public class NetworkUIManager : MonoBehaviour
     {
