@@ -1,5 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
+using UnityEngine.Events;
 
 namespace Main.Scripts.Player
 {
@@ -10,10 +12,16 @@ namespace Main.Scripts.Player
         private Canvas playerCanvas;
         [SerializeField]
         private Rigidbody2D playerRigidbody2D;
+        private UnityEvent _respawn;
+        
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
             playerCanvas.enabled = IsLocalPlayer;
+            if (_respawn == null)
+                _respawn = new UnityEvent();
+
+            _respawn.AddListener(RespawnServerRpc);
         }
 
         private void Start()
@@ -23,21 +31,33 @@ namespace Main.Scripts.Player
 
         private void Update()
         {
+            if (!IsServer) return;
+            
             if (playerHeath <= 0)
             {
-                Respawn();
+                RespawnServerRpc();
             }
+        }
+        
+        [ServerRpc]
+        private void RespawnServerRpc()
+        {
+            StartCoroutine(WaitForSpawnerAndRespawn());
         }
 
-        public void Respawn()
+        private IEnumerator WaitForSpawnerAndRespawn()
         {
+            // Wait until the SpawnPointManager is available
+            SpawnPointManager manager = null;
+            while (!(manager = FindFirstObjectByType<SpawnPointManager>()))
+            {
+                yield return null; // Wait one frame
+            }
+
             playerRigidbody2D.linearVelocity = Vector2.zero;
             playerHeath = 100f;
-            SpawnPointManager manager = FindFirstObjectByType<SpawnPointManager>();
-            if (manager)
-            {
-                manager.RespawnPlayer(transform);
-            }
+            manager.RespawnPlayer(transform);
         }
+
     }
 }

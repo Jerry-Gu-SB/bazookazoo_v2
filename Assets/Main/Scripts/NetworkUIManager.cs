@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 namespace Main.Scripts
 {
@@ -23,7 +22,10 @@ namespace Main.Scripts
         [Header("Map Selection UI Elements")]
         [SerializeField] private TMP_Text selectMapText;
         [SerializeField] private Button dustyButton;
-
+        
+        [Header("Networking Objects")]
+        [SerializeField] private SceneLoadingManager sceneLoadingManager;
+        
         private UnityTransport _transport;
 
         private void Awake()
@@ -55,11 +57,11 @@ namespace Main.Scripts
 
             string portStr = portInputField.text;
             ushort port = 7777;
+            
             if (!string.IsNullOrEmpty(portStr) && ushort.TryParse(portStr, out ushort parsedPort))
             {
                 port = parsedPort;
             }
-
             _transport.SetConnectionData(ip, port);
         }
 
@@ -74,34 +76,16 @@ namespace Main.Scripts
         {
             ApplyConnectionData();
             NetworkManager.Singleton.StartHost();
-            NetworkManager.Singleton.SceneManager.LoadScene("Lobby", LoadSceneMode.Additive);
+            sceneLoadingManager.LoadScene("Lobby");
             DeactivateConnectingUI();
             ActivateMapSelectionUI();
         }
-        
+
         private void LoadMapFromLobby(string mapSceneName)
         {
-            Scene lobbyScene = SceneManager.GetSceneByName("Lobby");
-
-            NetworkManager.Singleton.SceneManager.OnSceneEvent += OnSceneEvent;
-            NetworkManager.Singleton.SceneManager.LoadScene(mapSceneName, LoadSceneMode.Additive);
-            return;
-            
-            // Checks if we have finished loading into the actual map unloads the lobby
-            void OnSceneEvent(SceneEvent sceneEvent)
-            {
-                if (sceneEvent.SceneName != mapSceneName ||
-                    sceneEvent.SceneEventType != SceneEventType.LoadComplete) return;
-                
-                if (lobbyScene.IsValid())
-                {
-                    NetworkManager.Singleton.SceneManager.UnloadScene(lobbyScene);
-                }
-
-                NetworkManager.Singleton.SceneManager.OnSceneEvent -= OnSceneEvent;
-
-                DeactivateMapSelectionUI();
-            }
+            sceneLoadingManager.UnloadScene();
+            sceneLoadingManager.LoadScene(mapSceneName);
+            DeactivateMapSelectionUI();
         }
         
         private void ActivateConnectingUI()
