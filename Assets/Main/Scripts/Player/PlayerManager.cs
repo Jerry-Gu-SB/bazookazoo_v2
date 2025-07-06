@@ -12,16 +12,16 @@ namespace Main.Scripts.Player
         private Canvas playerCanvas;
         [SerializeField]
         private Rigidbody2D playerRigidbody2D;
-        private UnityEvent _respawn;
+        public static UnityEvent PlayerRespawn;
         
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
             playerCanvas.enabled = IsLocalPlayer;
-            if (_respawn == null)
-                _respawn = new UnityEvent();
+            if (PlayerRespawn == null)
+                PlayerRespawn = new UnityEvent();
 
-            _respawn.AddListener(Respawn);
+            PlayerRespawn.AddListener(Respawn);
         }
 
         private void Start()

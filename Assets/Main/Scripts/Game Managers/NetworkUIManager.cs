@@ -24,7 +24,7 @@ namespace Main.Scripts.Game_Managers
         [SerializeField] private Button dustyButton;
         
         [Header("Networking Objects")]
-        [SerializeField] private SceneLoadingManager sceneLoadingManager;
+        [SerializeField] private GameStateManager gameStateManager;
         
         private UnityTransport _transport;
 
@@ -76,15 +76,14 @@ namespace Main.Scripts.Game_Managers
         {
             ApplyConnectionData();
             NetworkManager.Singleton.StartHost();
-            sceneLoadingManager.LoadScene("Lobby");
+            gameStateManager.StartLobby();
             DeactivateConnectingUI();
             ActivateMapSelectionUI();
         }
 
         private void LoadMapFromLobby(string mapSceneName)
         {
-            sceneLoadingManager.UnloadScene();
-            sceneLoadingManager.LoadScene(mapSceneName);
+            gameStateManager.StartMapFromLobby(mapSceneName);
             DeactivateMapSelectionUI();
         }
         
