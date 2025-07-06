@@ -7,33 +7,48 @@ namespace Main.Scripts
 {
     public class SpawnPointManager : MonoBehaviour
     {
+        private int _numberOfSpawnPoints = -1;
         private List<GameObject> _spawnPoints = new List<GameObject>();
-        [SerializeField]
-        private int numberOfSpawnPoints = -1;
-        
+        private readonly List<SpawnPoint> _spawnPointScripts = new List<SpawnPoint>();
+        private readonly List<Transform> _spawnPointTransforms = new List<Transform>();
         private void Awake()
         {
             _spawnPoints = GetComponentsInChildren<SpawnPoint>(true)
                 .Select(sp => sp.gameObject)
                 .ToList();
-            numberOfSpawnPoints = _spawnPoints.Count;
+            _numberOfSpawnPoints = _spawnPoints.Count;
         }
-        
+
+        private void Start()
+        {
+            for (int i = 0; i < _numberOfSpawnPoints; i++)
+            {
+                _spawnPointScripts.Add(_spawnPoints[i].GetComponent<SpawnPoint>());
+            }
+
+            for (int i = 0; i < _numberOfSpawnPoints; i++)
+            {
+                _spawnPointTransforms.Add(_spawnPoints[i].GetComponent<Transform>());
+            }
+            
+            if (_spawnPointScripts.Count != _numberOfSpawnPoints) Debug.LogError("Spawn Point Scripts Error");
+            if (_spawnPointTransforms.Count != _numberOfSpawnPoints) Debug.LogError("Spawn Point Transforms Error");
+        }
+
         public void RespawnPlayer(Transform playerTransform)
         {
             // Finds a spawner that doesn't have a player close
             for (int i = 0; i < 20; i++)
             {
-                int spawnerIndex = Random.Range(0, numberOfSpawnPoints);
+                int spawnerIndex = Random.Range(0, _numberOfSpawnPoints);
                 
-                if (_spawnPoints[spawnerIndex].GetComponent<SpawnPoint>().playerInCloseProximity) continue;
+                if (_spawnPointScripts[spawnerIndex].playerInCloseProximity) continue;
                 
-                playerTransform.position = _spawnPoints[spawnerIndex].GetComponent<Transform>().position;
-                
+                playerTransform.position = _spawnPointTransforms[spawnerIndex].position;
                 return;
             }
             // If failed to get a position after 20 attempts, just spawn in a random spot
-            playerTransform.position = _spawnPoints[Random.Range(0, numberOfSpawnPoints)].transform.position;
+            playerTransform.position = _spawnPointTransforms[Random.Range(0, _numberOfSpawnPoints)].position;
         }
     }
 }
