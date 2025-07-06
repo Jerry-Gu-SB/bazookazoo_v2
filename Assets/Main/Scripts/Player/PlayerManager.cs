@@ -31,8 +31,6 @@ namespace Main.Scripts.Player
 
         private void Update()
         {
-            if (!IsServer) return;
-            
             if (playerHeath <= 0)
             {
                 Respawn();
