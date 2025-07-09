@@ -11,7 +11,6 @@ namespace Main.Scripts
 
         [Header("Rocket properties")]
         public float speed = 20f;
-        public int selfRocketDamage = 20;
         public int enemyRocketDamage = 40;
         public int rocketMinKnockBack = 5;
         public int rocketMaxKnockBack = 40;
@@ -35,9 +34,13 @@ namespace Main.Scripts
             {
                 if (collision.CompareTag("Player") && otherNetObj.NetworkObjectId != ownerId.Value)
                 {
+                    // TODO: refactor this if statement
                     PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
-                    collisionPlayerManager.playerHeath -= selfRocketDamage;
-
+                    collisionPlayerManager.playerHeath -= enemyRocketDamage;
+                    if (collisionPlayerManager.playerHeath <= 0)
+                    {
+                        PlayerManager.KilledPlayer.Invoke();
+                    }
                     Rigidbody2D enemyRigidBody2D = collision.GetComponent<Rigidbody2D>();
                     enemyRigidBody2D.AddForce(transform.right * rocketMaxKnockBack, ForceMode2D.Impulse);
                     
@@ -65,6 +68,7 @@ namespace Main.Scripts
 
             foreach (Collider2D hit in hits)
             {
+                // TODO: refactor this for loop
                 if (!hit.TryGetComponent(out NetworkObject netObj)) continue;
                 if (!hit.CompareTag("Player")) continue;
                 Rigidbody2D rb2d = hit.GetComponent<Rigidbody2D>();

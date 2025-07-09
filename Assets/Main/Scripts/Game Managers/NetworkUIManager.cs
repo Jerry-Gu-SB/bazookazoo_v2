@@ -83,7 +83,7 @@ namespace Main.Scripts.Game_Managers
 
         private void LoadMapFromLobby(string mapSceneName)
         {
-            gameStateManager.StartMapFromLobby(mapSceneName);
+            gameStateManager.StartMatch(mapSceneName);
             DeactivateMapSelectionUI();
         }
         
