@@ -1,6 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
+using Main.Scripts.Game_Managers;
 using UnityEngine.Events;
 
 namespace Main.Scripts.Player
@@ -18,9 +19,7 @@ namespace Main.Scripts.Player
         private Rigidbody2D playerRigidbody2D;
         
         [Header("Unity Events")]
-        public static UnityEvent ResetPlayer;
-        public static UnityEvent PlayerRespawn;
-        public static UnityEvent KilledPlayer;
+        public static UnityEvent killedPlayer;
         
         public override void OnNetworkSpawn()
         {
@@ -31,7 +30,7 @@ namespace Main.Scripts.Player
         
         private void Start()
         {
-            ResetPlayerProperties();
+            ResetPlayer();
         }
 
         private void Update()
@@ -42,8 +41,9 @@ namespace Main.Scripts.Player
             }
         }
 
-        private void ResetPlayerProperties()
+        private void ResetPlayer()
         {
+            Respawn();
             playerHeath = 100f;
             playerScore = 0;
         }
@@ -68,20 +68,20 @@ namespace Main.Scripts.Player
 
         private void UpdateScore()
         {
+            // TODO: this is bugged, somehow only the killed player is getting score
+            if (!IsOwner && !IsLocalPlayer) return;
             playerScore += 1;
             Debug.Log("Score: " + playerScore);
         }
+    
         
         private void AddUnityEventListeners()
         {
-            if (PlayerRespawn == null) PlayerRespawn = new UnityEvent();
-            PlayerRespawn.AddListener(Respawn);
-
-            if (KilledPlayer == null) KilledPlayer = new UnityEvent();
-            KilledPlayer.AddListener(UpdateScore);
+            if (killedPlayer == null) killedPlayer = new UnityEvent();
+            killedPlayer.AddListener(UpdateScore);
             
-            if (ResetPlayer == null) ResetPlayer = new UnityEvent();
-            ResetPlayer.AddListener(ResetPlayerProperties);
+            GameStateManager.startLobby.AddListener(ResetPlayer);
+            GameStateManager.startGame.AddListener(ResetPlayer);
         }
     }
 }

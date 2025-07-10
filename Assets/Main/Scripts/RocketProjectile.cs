@@ -1,4 +1,5 @@
 using System.Collections;
+using Main.Scripts.Game_Managers;
 using Main.Scripts.Player;
 using Unity.Netcode;
 using UnityEngine;
@@ -19,6 +20,11 @@ namespace Main.Scripts
         private Rigidbody2D _rb;
         private SpriteRenderer _renderer;
         private bool _exploded = false;
+
+        private void Awake()
+        {
+            GameStateManager.startGame.AddListener(DestroySelf);
+        }
         
         private void Start()
         {
@@ -39,7 +45,7 @@ namespace Main.Scripts
                     collisionPlayerManager.playerHeath -= enemyRocketDamage;
                     if (collisionPlayerManager.playerHeath <= 0)
                     {
-                        PlayerManager.KilledPlayer.Invoke();
+                        PlayerManager.killedPlayer.Invoke();
                     }
                     Rigidbody2D enemyRigidBody2D = collision.GetComponent<Rigidbody2D>();
                     enemyRigidBody2D.AddForce(transform.right * rocketMaxKnockBack, ForceMode2D.Impulse);
@@ -85,6 +91,11 @@ namespace Main.Scripts
             }
             yield return new WaitForSeconds(.05f);
             
+            if (IsServer) Destroy(gameObject);
+        }
+
+        private void DestroySelf()
+        {
             if (IsServer) Destroy(gameObject);
         }
     }

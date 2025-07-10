@@ -1,4 +1,4 @@
-using Main.Scripts.Player;
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,51 +8,16 @@ namespace Main.Scripts.Game_Managers
     public class GameStateManager : NetworkBehaviour
     {
         [SerializeField] private SceneLoadingManager sceneLoadingManager;
-        public void StartLobby()
-        {
-            sceneLoadingManager.LoadNewSceneAdditive("Lobby");
-            RespawnAllPlayers();
-        }
 
-        public void StartMatch(string mapSceneName)
-        {
-            SceneLoadingManager.TransitionScenes("Lobby", mapSceneName);
-            DestroyAllRockets();
-            RespawnAllPlayers();
-            ResetAllPlayers();
-        }
+        public static UnityEvent<string> switchMaps;
+        public static UnityEvent startLobby;
+        public static UnityEvent startGame;
 
-        private static void RespawnAllPlayers()
+        private void Awake()
         {
-            foreach (PlayerManager player in FindObjectsByType<PlayerManager>(FindObjectsSortMode.None))
-            {
-                if (player.IsOwner || player.IsLocalPlayer)
-                {
-                    PlayerManager.PlayerRespawn.Invoke();
-                }
-            }
-        }
-
-        private static void ResetAllPlayers()
-        {
-            foreach (PlayerManager player in FindObjectsByType<PlayerManager>(FindObjectsSortMode.None))
-            {
-                if (player.IsOwner || player.IsLocalPlayer)
-                {
-                    PlayerManager.ResetPlayer.Invoke();
-                }
-            }
-        }
-
-        private void DestroyAllRockets()
-        {
-            foreach (RocketProjectile rocket in FindObjectsByType<RocketProjectile>(FindObjectsSortMode.None))
-            {
-                if (IsServer)
-                {
-                    Destroy(rocket.gameObject);
-                }
-            }
+            if (switchMaps == null) switchMaps = new UnityEvent<string>();
+            if (startLobby == null) startLobby = new UnityEvent();
+            if (startGame == null) startGame = new UnityEvent();
         }
     }
 }

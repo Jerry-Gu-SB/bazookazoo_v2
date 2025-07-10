@@ -23,9 +23,6 @@ namespace Main.Scripts.Game_Managers
         [SerializeField] private TMP_Text selectMapText;
         [SerializeField] private Button dustyButton;
         
-        [Header("Networking Objects")]
-        [SerializeField] private GameStateManager gameStateManager;
-        
         private UnityTransport _transport;
 
         private void Awake()
@@ -76,14 +73,15 @@ namespace Main.Scripts.Game_Managers
         {
             ApplyConnectionData();
             NetworkManager.Singleton.StartHost();
-            gameStateManager.StartLobby();
+            GameStateManager.startLobby.Invoke();
             DeactivateConnectingUI();
             ActivateMapSelectionUI();
         }
 
-        private void LoadMapFromLobby(string mapSceneName)
+        private void LoadMapFromLobby(string mapName)
         {
-            gameStateManager.StartMatch(mapSceneName);
+            GameStateManager.switchMaps.Invoke(mapName);
+            GameStateManager.startGame.Invoke();
             DeactivateMapSelectionUI();
         }
         

@@ -1325,6 +1325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  currentScene: 
 --- !u!114 &1802737957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2651,7 +2652,6 @@ MonoBehaviour:
   localIPDisplayText: {fileID: 2115930405}
   selectMapText: {fileID: 217599717}
   dustyButton: {fileID: 1995611640}
-  gameStateManager: {fileID: 1802737957}
 --- !u!1 &8051278541442919277
 GameObject:
   m_ObjectHideFlags: 0
