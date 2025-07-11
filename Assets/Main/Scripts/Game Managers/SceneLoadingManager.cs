@@ -10,7 +10,7 @@ namespace Main.Scripts.Game_Managers
     {
         public string currentScene;
 
-        private void Awake()
+        private void Start()
         {
             GameStateManager.startLobby.AddListener(() => LoadNewSceneAdditive("Lobby"));
             GameStateManager.switchMaps.AddListener(TransitionScenes);
