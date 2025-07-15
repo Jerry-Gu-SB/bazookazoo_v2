@@ -414,7 +414,7 @@ Transform:
   m_GameObject: {fileID: 7198013069251009078}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -643,6 +643,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   playerHeath: 100
+  playerScore: 0
   playerCanvas: {fileID: 6546198219747128345}
   playerRigidbody2D: {fileID: -3598226789266093429}
 --- !u!114 &3866731337991339739

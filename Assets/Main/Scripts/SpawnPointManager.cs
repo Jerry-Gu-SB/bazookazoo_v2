@@ -11,6 +11,7 @@ namespace Main.Scripts
         private List<GameObject> _spawnPoints = new List<GameObject>();
         private readonly List<SpawnPoint> _spawnPointScripts = new List<SpawnPoint>();
         private readonly List<Transform> _spawnPointTransforms = new List<Transform>();
+        
         private void Awake()
         {
             _spawnPoints = GetComponentsInChildren<SpawnPoint>(true)
@@ -30,7 +31,6 @@ namespace Main.Scripts
             {
                 _spawnPointTransforms.Add(_spawnPoints[i].GetComponent<Transform>());
             }
-            
             if (_spawnPointScripts.Count != _numberOfSpawnPoints) Debug.LogError("Spawn Point Scripts Error");
             if (_spawnPointTransforms.Count != _numberOfSpawnPoints) Debug.LogError("Spawn Point Transforms Error");
         }

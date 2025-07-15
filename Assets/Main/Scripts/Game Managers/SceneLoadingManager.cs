@@ -9,13 +9,8 @@ namespace Main.Scripts.Game_Managers
     public class SceneLoadingManager : NetworkBehaviour
     {
         public string currentScene;
-
-        private void Start()
-        {
-            GameStateManager.startLobby.AddListener(() => LoadNewSceneAdditive("Lobby"));
-            GameStateManager.switchMaps.AddListener(TransitionScenes);
-        }
-        private void TransitionScenes(string newScene)
+        
+        public void TransitionScenes(string newScene)
         {
             if (currentScene.IsNullOrEmpty())
             {
@@ -42,7 +37,7 @@ namespace Main.Scripts.Game_Managers
             }
         }
         
-        private void LoadNewSceneAdditive(string sceneName)
+        public void LoadNewSceneAdditive(string sceneName)
         {
             NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
             currentScene = sceneName;

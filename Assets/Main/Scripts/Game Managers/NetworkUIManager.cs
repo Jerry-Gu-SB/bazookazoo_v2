@@ -23,6 +23,9 @@ namespace Main.Scripts.Game_Managers
         [SerializeField] private TMP_Text selectMapText;
         [SerializeField] private Button dustyButton;
         
+        [Header("Managers")]
+        [SerializeField] private GameStateManager gameStateManager;
+        
         private UnityTransport _transport;
 
         private void Awake()
@@ -42,7 +45,7 @@ namespace Main.Scripts.Game_Managers
 
             startHostButton.onClick.AddListener(StartHost);
             startClientButton.onClick.AddListener(StartClient);
-            dustyButton.onClick.AddListener(() => LoadMapFromLobby("Dusty"));
+            dustyButton.onClick.AddListener(() => StartGame("Dusty"));
             
             DisplayLocalIPAddress();
         }
@@ -73,15 +76,14 @@ namespace Main.Scripts.Game_Managers
         {
             ApplyConnectionData();
             NetworkManager.Singleton.StartHost();
-            GameStateManager.startLobby.Invoke();
+            gameStateManager.StartLobby();
             DeactivateConnectingUI();
             ActivateMapSelectionUI();
         }
 
-        private void LoadMapFromLobby(string mapName)
+        private void StartGame(string mapName)
         {
-            GameStateManager.switchMaps.Invoke(mapName);
-            GameStateManager.startGame.Invoke();
+            gameStateManager.StartGame(mapName);
             DeactivateMapSelectionUI();
         }
         
