@@ -72,7 +72,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  sceneLoadingManager: {fileID: 5934105979018711657}
+  sceneLoader: {fileID: 5934105979018711657}
 --- !u!114 &5934105979018711657
 MonoBehaviour:
   m_ObjectHideFlags: 0

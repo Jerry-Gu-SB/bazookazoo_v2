@@ -7,8 +7,9 @@ namespace Main.Scripts.Player
 {
     public class PlayerManager : NetworkBehaviour
     {
-        [Header("Player Properties")]
-        public float playerHeath = 100f;
+        [Header("Player Properties")] 
+        public float maxHealth = 100f;
+        public float playerHeath;
         public int playerScore = 0;
 
         [SerializeField] private Canvas playerCanvas;
@@ -17,6 +18,7 @@ namespace Main.Scripts.Player
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
+            playerHeath = maxHealth;
             playerCanvas.enabled = IsLocalPlayer;
             GameStateManager.GameStateChanged += HandleGameState;
         }
@@ -24,6 +26,7 @@ namespace Main.Scripts.Player
         public override void OnDestroy()
         {
             GameStateManager.GameStateChanged -= HandleGameState;
+            base.OnDestroy();
         }
 
         private void Update()
@@ -36,7 +39,7 @@ namespace Main.Scripts.Player
 
         private void HandleGameState(GameState state)
         {
-            if (state == GameState.GameReady)
+            if (state is GameState.GameReady or GameState.LobbyReady)
             {
                 ResetPlayer();
             }
@@ -44,20 +47,21 @@ namespace Main.Scripts.Player
 
         private void ResetPlayer()
         {
-            playerHeath = 100f;
+            playerHeath = maxHealth;
             playerScore = 0;
             Respawn();
         }
 
         private void Respawn()
         {
+            playerHeath = maxHealth;
             playerRigidbody2D.linearVelocity = Vector2.zero;
             StartCoroutine(WaitForSpawnerAndRespawn());
         }
 
         private IEnumerator WaitForSpawnerAndRespawn()
         {
-            float timeout = 5f;
+            const float timeout = 5f;
             float timer = 0f;
             SpawnPointManager spawnPointManager = null;
 
@@ -72,15 +76,6 @@ namespace Main.Scripts.Player
                 yield return null;
             }
             spawnPointManager.RespawnPlayer(transform);
-        }
-
-        public static void SpawnAllPlayers(System.Action callback)
-        {
-            foreach (var player in FindObjectsByType<PlayerManager>(FindObjectsSortMode.None))
-            {
-                player.ResetPlayer();
-            }
-            callback?.Invoke();
         }
     }
 }

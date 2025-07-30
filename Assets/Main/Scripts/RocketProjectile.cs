@@ -26,8 +26,18 @@ namespace Main.Scripts
             _rb = GetComponent<Rigidbody2D>();
             _renderer = GetComponent<SpriteRenderer>();
             _rb.linearVelocity = transform.right * speed;
-        }
+            
+            GameStateManager.GameStateChanged += HandleGameState;
+        }   
 
+        private void HandleGameState(GameState state)
+        {
+            if ((state is GameState.GameReady or GameState.Connecting or GameState.MapLoading or GameState.LobbyReady)
+                && IsServer)
+            {
+                DestroySelf();
+            }
+        }
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (_exploded) return;
@@ -82,13 +92,13 @@ namespace Main.Scripts
             }
             yield return new WaitForSeconds(.05f);
             
-            if (IsServer) Destroy(gameObject);
+            DestroySelf();
         }
 
         private void DestroySelf()
         {
+            if (!IsServer || !this) return;
             this.enabled = false;
-            if (!IsServer) return;
             Destroy(gameObject);
         }
     }

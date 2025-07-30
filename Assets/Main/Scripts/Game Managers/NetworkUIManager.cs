@@ -28,11 +28,9 @@ namespace Main.Scripts.Game_Managers
 
         private void Awake()
         {
-            if (!FindAnyObjectByType<EventSystem>())
-            {
-                GameObject es = new("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
-                es.transform.SetParent(transform);
-            }
+            if (FindAnyObjectByType<EventSystem>()) return;
+            GameObject eventSystem = new("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+            eventSystem.transform.SetParent(transform);
         }
 
         private void Start()
@@ -63,15 +61,17 @@ namespace Main.Scripts.Game_Managers
 
         private void HandleGameStateChanged(GameState state)
         {
-            ShowConnectingUI(state == GameState.Idle || state == GameState.Connecting);
+            ShowConnectingUI(state is GameState.Idle or GameState.Connecting);
             ShowMapSelectionUI(state == GameState.LobbyReady);
         }
 
         private void StartClient()
         {
             ApplyConnectionData();
-            GameStateManager.Instance.TransitionToState(GameState.Connecting);
             NetworkManager.Singleton.StartClient();
+            GameStateManager.Instance.TransitionToState(GameState.Connecting);
+            ShowConnectingUI(false);
+            ShowMapSelectionUI(false);
         }
 
         private void StartHost()

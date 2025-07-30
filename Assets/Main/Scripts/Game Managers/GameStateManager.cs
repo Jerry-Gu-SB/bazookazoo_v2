@@ -1,4 +1,5 @@
 using System;
+using Main.Scripts.Player;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,7 +13,6 @@ namespace Main.Scripts.Game_Managers
         LobbyReady,
         MapLoading,
         GameReady,
-        SpawningPlayers,
         GameRunning
     }
 
@@ -62,19 +62,30 @@ namespace Main.Scripts.Game_Managers
         {
             switch (state)
             {
+                case GameState.Idle:
+                    Debug.Log($"[GameStateManager] Received Idle GameState from {CurrentState}");
+                    break;
+                case GameState.Connecting:
+                    Debug.Log($"[GameStateManager] Received Connecting GameState from {CurrentState}");
+                    break;
                 case GameState.LobbyLoading:
                     sceneLoader.LoadScene(MapNames.Lobby, () => TransitionToState(GameState.LobbyReady));
+                    break;
+                case GameState.LobbyReady:
+                    Debug.Log($"[GameStateManager] Received LobbyReady GameState from {CurrentState}");
                     break;
                 case GameState.MapLoading:
                     if (string.IsNullOrEmpty(_selectedMap)) _selectedMap = MapNames.Lobby;
                     sceneLoader.LoadScene(_selectedMap, () => TransitionToState(GameState.GameReady));
                     break;
-                case GameState.SpawningPlayers:
-                    Player.PlayerManager.SpawnAllPlayers(() => TransitionToState(GameState.GameRunning));
+                case GameState.GameReady:
+                    Debug.Log($"[GameStateManager] Received GameReady GameState from {CurrentState}");
                     break;
                 case GameState.GameRunning:
                     Debug.Log("[GameStateManager] Game is now running.");
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
     }

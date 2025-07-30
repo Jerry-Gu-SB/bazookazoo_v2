@@ -39,6 +39,7 @@ namespace Main.Scripts.Game_Managers
             {
                 yield return null;
                 yield return null;
+                yield return null;
                 onLoaded?.Invoke();
             }
         }
