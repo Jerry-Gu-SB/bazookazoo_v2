@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,11 +35,14 @@ namespace Main.Scripts.Game_Managers
                 if (sceneEvent.SceneName != newScene ||
                     sceneEvent.SceneEventType != SceneEventType.LoadComplete) return;
 
+                StartCoroutine(DelaySceneReady());
+                
                 if (currentSceneObject.IsValid())
                 {
                     NetworkManager.Singleton.SceneManager.UnloadScene(currentSceneObject);
                 }
                 NetworkManager.Singleton.SceneManager.OnSceneEvent -= OnSceneEvent;
+
             }
         }
         
@@ -47,5 +51,14 @@ namespace Main.Scripts.Game_Managers
             NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
             currentScene = sceneName;
         }
+        
+        private static IEnumerator DelaySceneReady()
+        {
+            // Let a few frames pass so all Start() / Awake() calls run
+            yield return null;
+            yield return null;
+            GameStateManager.onSceneReady?.Invoke();
+        }
+
     }
 }

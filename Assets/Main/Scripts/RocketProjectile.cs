@@ -96,7 +96,9 @@ namespace Main.Scripts
 
         private void DestroySelf()
         {
-            if (IsServer) Destroy(gameObject);
+            this.enabled = false;
+            if (!IsServer) return;
+            Destroy(gameObject);
         }
     }
 }

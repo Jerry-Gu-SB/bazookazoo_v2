@@ -27,11 +27,6 @@ namespace Main.Scripts.Player
             playerCanvas.enabled = IsLocalPlayer;
             AddUnityEventListeners();
         }
-        
-        private void Start()
-        {
-            ResetPlayer();
-        }
 
         private void Update()
         {
@@ -57,14 +52,26 @@ namespace Main.Scripts.Player
 
         private IEnumerator WaitForSpawnerAndRespawn()
         {
-            // Wait until the SpawnPointManager is available
-            SpawnPointManager spawnPointManager;
+            float timeout = 5f;
+            float timer = 0f;
+
+            SpawnPointManager spawnPointManager = null;
+
             while (!(spawnPointManager = FindFirstObjectByType<SpawnPointManager>()))
             {
-                yield return null; // Wait one frame
+                timer += Time.deltaTime;
+                if (timer > timeout)
+                {
+                    Debug.LogWarning("Timeout: Could not find SpawnPointManager. Spawning at (0,0).");
+                    transform.position = Vector3.zero;
+                    yield break;
+                }
+                yield return null;
             }
+
             spawnPointManager.RespawnPlayer(transform);
         }
+
 
         private void UpdateScore()
         {
@@ -80,8 +87,7 @@ namespace Main.Scripts.Player
             if (killedPlayer == null) killedPlayer = new UnityEvent();
             killedPlayer.AddListener(UpdateScore);
             
-            GameStateManager.startLobby.AddListener(ResetPlayer);
-            GameStateManager.startGame.AddListener(ResetPlayer);
+            GameStateManager.onSceneReady.AddListener(ResetPlayer);
         }
     }
 }
