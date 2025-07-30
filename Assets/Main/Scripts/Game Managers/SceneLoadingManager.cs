@@ -3,7 +3,6 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using WebSocketSharp;
 
 namespace Main.Scripts.Game_Managers
 {
@@ -11,54 +10,37 @@ namespace Main.Scripts.Game_Managers
     {
         public string currentScene;
 
-        private void Start()
+        public void LoadScene(string sceneName, Action onLoaded)
         {
-            GameStateManager.startLobby.AddListener(() => LoadNewSceneAdditive("Lobby"));
-            GameStateManager.switchMaps.AddListener(TransitionScenes);
-        }
-        private void TransitionScenes(string newScene)
-        {
-            if (currentScene.IsNullOrEmpty())
-            {
-                Debug.LogError("Current scene is not set");
-            }
-            
-            Scene currentSceneObject = SceneManager.GetSceneByName(currentScene);
-            currentScene = newScene;
-
-            NetworkManager.Singleton.SceneManager.OnSceneEvent += OnSceneEvent;
-            NetworkManager.Singleton.SceneManager.LoadScene(newScene, LoadSceneMode.Additive);
-            return;
-
-            void OnSceneEvent(SceneEvent sceneEvent)
-            {
-                if (sceneEvent.SceneName != newScene ||
-                    sceneEvent.SceneEventType != SceneEventType.LoadComplete) return;
-
-                StartCoroutine(DelaySceneReady());
-                
-                if (currentSceneObject.IsValid())
-                {
-                    NetworkManager.Singleton.SceneManager.UnloadScene(currentSceneObject);
-                }
-                NetworkManager.Singleton.SceneManager.OnSceneEvent -= OnSceneEvent;
-
-            }
-        }
-        
-        private void LoadNewSceneAdditive(string sceneName)
-        {
-            NetworkManager.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+            var oldScene = currentScene;
             currentScene = sceneName;
-        }
-        
-        private static IEnumerator DelaySceneReady()
-        {
-            // Let a few frames pass so all Start() / Awake() calls run
-            yield return null;
-            yield return null;
-            GameStateManager.onSceneReady?.Invoke();
-        }
 
+            NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleSceneEvent;
+            NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+
+            void HandleSceneEvent(SceneEvent e)
+            {
+                if (e.SceneName != sceneName || e.SceneEventType != SceneEventType.LoadComplete) return;
+
+                StartCoroutine(DelayCallback());
+
+                if (!string.IsNullOrEmpty(oldScene))
+                {
+                    var old = SceneManager.GetSceneByName(oldScene);
+                    if (old.IsValid())
+                    {
+                        NetworkManager.Singleton.SceneManager.UnloadScene(old);
+                    }
+                }
+                NetworkManager.Singleton.SceneManager.OnSceneEvent -= HandleSceneEvent;
+            }
+
+            IEnumerator DelayCallback()
+            {
+                yield return null;
+                yield return null;
+                onLoaded?.Invoke();
+            }
+        }
     }
 }

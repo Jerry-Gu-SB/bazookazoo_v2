@@ -20,11 +20,6 @@ namespace Main.Scripts
         private Rigidbody2D _rb;
         private SpriteRenderer _renderer;
         private bool _exploded = false;
-
-        private void Awake()
-        {
-            GameStateManager.startGame.AddListener(DestroySelf);
-        }
         
         private void Start()
         {
@@ -43,10 +38,6 @@ namespace Main.Scripts
                     // TODO: refactor this if statement
                     PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
                     collisionPlayerManager.playerHeath -= enemyRocketDamage;
-                    if (collisionPlayerManager.playerHeath <= 0)
-                    {
-                        PlayerManager.killedPlayer.Invoke();
-                    }
                     Rigidbody2D enemyRigidBody2D = collision.GetComponent<Rigidbody2D>();
                     enemyRigidBody2D.AddForce(transform.right * rocketMaxKnockBack, ForceMode2D.Impulse);
                     

@@ -7,6 +7,7 @@ using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Main.Scripts.Game_Managers;
 
 namespace Main.Scripts.Game_Managers
 {
@@ -18,22 +19,20 @@ namespace Main.Scripts.Game_Managers
         [SerializeField] private TMP_InputField ipAddressInputField;
         [SerializeField] private TMP_InputField portInputField;
         [SerializeField] private TMP_Text localIPDisplayText;
-        
+
         [Header("Map Selection UI Elements")]
         [SerializeField] private TMP_Text selectMapText;
         [SerializeField] private Button dustyButton;
-        
+
         private UnityTransport _transport;
 
         private void Awake()
         {
-            if (FindAnyObjectByType<EventSystem>()) return;
-            Type inputType = typeof(StandaloneInputModule);
-            GameObject eventSystem = new GameObject("EventSystem", typeof(EventSystem), inputType);
-            eventSystem.transform.SetParent(transform);
-            
-            ActivateConnectingUI();
-            DeactivateMapSelectionUI();
+            if (!FindAnyObjectByType<EventSystem>())
+            {
+                GameObject es = new("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule));
+                es.transform.SetParent(transform);
+            }
         }
 
         private void Start()
@@ -42,90 +41,73 @@ namespace Main.Scripts.Game_Managers
 
             startHostButton.onClick.AddListener(StartHost);
             startClientButton.onClick.AddListener(StartClient);
-            dustyButton.onClick.AddListener(() => LoadMapFromLobby("Dusty"));
-            
+            dustyButton.onClick.AddListener(() =>
+            {
+                GameStateManager.Instance.SetSelectedMap(MapNames.Dusty);
+                GameStateManager.Instance.TransitionToState(GameState.MapLoading);
+            });
+
             DisplayLocalIPAddress();
+            HandleGameStateChanged(GameStateManager.Instance.CurrentState);
         }
 
-        private void ApplyConnectionData()
+        private void OnEnable()
         {
-            string ip = ipAddressInputField.text;
-            if (string.IsNullOrEmpty(ip)) ip = "127.0.0.1";
+            GameStateManager.GameStateChanged += HandleGameStateChanged;
+        }
 
-            string portStr = portInputField.text;
-            ushort port = 7777;
-            
-            if (!string.IsNullOrEmpty(portStr) && ushort.TryParse(portStr, out ushort parsedPort))
-            {
-                port = parsedPort;
-            }
-            _transport.SetConnectionData(ip, port);
+        private void OnDisable()
+        {
+            GameStateManager.GameStateChanged -= HandleGameStateChanged;
+        }
+
+        private void HandleGameStateChanged(GameState state)
+        {
+            ShowConnectingUI(state == GameState.Idle || state == GameState.Connecting);
+            ShowMapSelectionUI(state == GameState.LobbyReady);
         }
 
         private void StartClient()
         {
             ApplyConnectionData();
+            GameStateManager.Instance.TransitionToState(GameState.Connecting);
             NetworkManager.Singleton.StartClient();
-            DeactivateConnectingUI();
         }
 
         private void StartHost()
         {
             ApplyConnectionData();
             NetworkManager.Singleton.StartHost();
-            GameStateManager.startLobby.Invoke();
-            DeactivateConnectingUI();
-            ActivateMapSelectionUI();
+            GameStateManager.Instance.TransitionToState(GameState.LobbyLoading);
         }
 
-        private void LoadMapFromLobby(string mapName)
+        private void ApplyConnectionData()
         {
-            GameStateManager.switchMaps.Invoke(mapName);
-            GameStateManager.startGame.Invoke();
-            DeactivateMapSelectionUI();
-        }
-        
-        private void ActivateConnectingUI()
-        {
-            startClientButton.gameObject.SetActive(true);
-            startHostButton.gameObject.SetActive(true);
-            ipAddressInputField.gameObject.SetActive(true);
-            portInputField.gameObject.SetActive(true);
-            localIPDisplayText.gameObject.SetActive(true);
-            
-        }
-        private void DeactivateConnectingUI()
-        {
-            startClientButton.gameObject.SetActive(false);
-            startHostButton.gameObject.SetActive(false);
-            ipAddressInputField.gameObject.SetActive(false);
-            portInputField.gameObject.SetActive(false);
-            localIPDisplayText.gameObject.SetActive(false);
+            string ip = string.IsNullOrEmpty(ipAddressInputField.text) ? "127.0.0.1" : ipAddressInputField.text;
+            ushort port = ushort.TryParse(portInputField.text, out ushort p) ? p : (ushort)7777;
+            _transport.SetConnectionData(ip, port);
         }
 
-        private void ActivateMapSelectionUI()
+        private void ShowConnectingUI(bool show)
         {
-            selectMapText.gameObject.SetActive(true);
-            dustyButton.gameObject.SetActive(true);
+            startClientButton.gameObject.SetActive(show);
+            startHostButton.gameObject.SetActive(show);
+            ipAddressInputField.gameObject.SetActive(show);
+            portInputField.gameObject.SetActive(show);
+            localIPDisplayText.gameObject.SetActive(show);
         }
 
-        private void DeactivateMapSelectionUI()
+        private void ShowMapSelectionUI(bool show)
         {
-            selectMapText.gameObject.SetActive(false);
-            dustyButton.gameObject.SetActive(false);
+            selectMapText.gameObject.SetActive(show);
+            dustyButton.gameObject.SetActive(show);
         }
 
         private void DisplayLocalIPAddress()
         {
-            string ip = GetLocalIPv4();
-            localIPDisplayText.text = $"Your IP: {ip} \nRecommended port: 7777";
-        }
-
-        private static string GetLocalIPv4()
-        {
-            return Dns.GetHostEntry(Dns.GetHostName())
-                .AddressList.First(f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                .ToString();
+            string ip = Dns.GetHostEntry(Dns.GetHostName())
+                .AddressList.FirstOrDefault(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)?.ToString();
+            localIPDisplayText.text = $"Your IP: {ip}\nRecommended port: 7777";
         }
     }
 }
