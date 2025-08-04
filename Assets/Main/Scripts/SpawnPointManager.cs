@@ -25,6 +25,9 @@ namespace Main.Scripts
                 playerTransform.position = _spawnPoints[index].position;
                 return;
             }
+            // BUGFIX: The players can spawn on top of each other which is why sometimes they'll just teleport to 
+            // the corner of the map and fling themselves wildly when the game starts.
+            Debug.Log("RESPAWNED PLAYER RANDOMLY");
             playerTransform.position = _spawnPoints[Random.Range(0, _spawnPoints.Count)].position;
         }
     }

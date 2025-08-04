@@ -21,6 +21,12 @@ namespace Main.Scripts.Player
             playerHeath = maxHealth;
             playerCanvas.enabled = IsLocalPlayer;
             GameStateManager.GameStateChanged += HandleGameState;
+            
+            if (IsClient && GameStateManager.Instance != null)
+            {
+                HandleGameState(GameStateManager.Instance.CurrentState);
+            }
+
         }
 
         public override void OnDestroy()
@@ -39,6 +45,7 @@ namespace Main.Scripts.Player
 
         private void HandleGameState(GameState state)
         {
+            Debug.Log(state);
             if (state is GameState.GameReady or GameState.LobbyReady)
             {
                 ResetPlayer();

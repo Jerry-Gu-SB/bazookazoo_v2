@@ -32,7 +32,11 @@ namespace Main.Scripts
 
         private void HandleGameState(GameState state)
         {
-            if ((state is GameState.GameReady or GameState.Connecting or GameState.MapLoading or GameState.LobbyReady)
+            if ((state is 
+                    GameState.Connecting or 
+                    GameState.MapLoading or 
+                    GameState.LobbyReady or 
+                    GameState.LobbyLoading)
                 && IsServer)
             {
                 DestroySelf();
