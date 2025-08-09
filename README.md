@@ -9,10 +9,12 @@ Features to implement:
 - respawning
   - ~~random is probably good enough. if you get spawn killed who cares.~~
   - need a death screen
+  - give player a couple seconds of invincibility on spawn
 - win conditions
   - First to X kills
   - scoreboard
 - map design
   - maybe different terrains. nothing crazy though.
 - some different weapons
-- some basic art
+- some basic pixel art
+- UI art revamp
