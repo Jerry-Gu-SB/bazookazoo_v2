@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
@@ -26,7 +27,6 @@ namespace Main.Scripts.Player
             {
                 HandleGameState(GameStateManager.Instance.CurrentState);
             }
-
         }
 
         public override void OnDestroy()
@@ -45,7 +45,6 @@ namespace Main.Scripts.Player
 
         private void HandleGameState(GameState state)
         {
-            Debug.Log(state);
             if (state is GameState.GameReady or GameState.LobbyReady)
             {
                 ResetPlayer();
@@ -82,7 +81,10 @@ namespace Main.Scripts.Player
                 }
                 yield return null;
             }
-            spawnPointManager.RespawnPlayer(transform);
+
+            bool isGameStart = GameStateManager.Instance.CurrentState == GameState.GameReady;
+            spawnPointManager.RespawnPlayer(transform, requireUnique: isGameStart);
         }
+
     }
 }

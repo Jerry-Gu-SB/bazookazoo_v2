@@ -26,6 +26,18 @@ namespace Main.Scripts.Game_Managers
         private string _selectedMap = MapNames.Lobby;
 
         public GameState CurrentState { get; private set; } = GameState.Idle;
+        
+        private readonly NetworkVariable<GameState> _networkedGameState = new(
+            GameState.Idle,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+        public override void OnNetworkSpawn()
+        {
+            if (!IsClient) return;
+            _networkedGameState.OnValueChanged += OnGameStateChanged;   
+            OnGameStateChanged(GameState.Idle, _networkedGameState.Value); // Catch up to current state
+        }
 
         private void Awake()
         {
@@ -52,38 +64,50 @@ namespace Main.Scripts.Game_Managers
 
         public void TransitionToState(GameState newState)
         {
+            if (!IsServer) return;
+
             Debug.Log($"[GameStateManager] Transitioning from {CurrentState} to {newState}");
-            CurrentState = newState;
-            GameStateChanged?.Invoke(CurrentState);
-            HandleState(CurrentState);
+
+            _networkedGameState.Value = newState; // Triggers OnValueChanged on clients
+
+            HandleState(newState);
+
+            GameStateChanged?.Invoke(newState);
         }
+        
+        private void OnGameStateChanged(GameState oldState, GameState newState)
+        {
+            CurrentState = newState;
+
+            if (IsServer) return;
+            Debug.Log($"[GameStateManager] Client received GameState: {newState}");
+            GameStateChanged?.Invoke(newState);
+        }
+
 
         private void HandleState(GameState state)
         {
             switch (state)
             {
                 case GameState.Idle:
-                    Debug.Log($"[GameStateManager] Received Idle GameState from {CurrentState}");
-                    break;
                 case GameState.Connecting:
-                    Debug.Log($"[GameStateManager] Received Connecting GameState from {CurrentState}");
+                case GameState.GameRunning:
+                case GameState.GameReady:
+                case GameState.LobbyReady:
+                    Debug.Log($"[GameStateManager] State: {state}");
                     break;
+
                 case GameState.LobbyLoading:
+                    if (!IsServer) return;
                     sceneLoader.LoadScene(MapNames.Lobby, () => TransitionToState(GameState.LobbyReady));
                     break;
-                case GameState.LobbyReady:
-                    Debug.Log($"[GameStateManager] Received LobbyReady GameState from {CurrentState}");
-                    break;
+
                 case GameState.MapLoading:
+                    if (!IsServer) return;
                     if (string.IsNullOrEmpty(_selectedMap)) _selectedMap = MapNames.Lobby;
                     sceneLoader.LoadScene(_selectedMap, () => TransitionToState(GameState.GameReady));
                     break;
-                case GameState.GameReady:
-                    Debug.Log($"[GameStateManager] Received GameReady GameState from {CurrentState}");
-                    break;
-                case GameState.GameRunning:
-                    Debug.Log("[GameStateManager] Game is now running.");
-                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }

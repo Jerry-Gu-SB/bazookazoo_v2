@@ -17,6 +17,7 @@ namespace Main.Scripts.Game_Managers
 
             NetworkManager.Singleton.SceneManager.OnSceneEvent += HandleSceneEvent;
             NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+            return;
 
             void HandleSceneEvent(SceneEvent e)
             {
