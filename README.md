@@ -8,7 +8,7 @@ Features to implement:
 - ~~health packs~~
 - respawning
   - ~~random is probably good enough. if you get spawn killed who cares.~~
-  - need a death screen
+  - ~~need a death screen~~
   - give player a couple seconds of invincibility on spawn
 - win conditions
   - First to X kills
