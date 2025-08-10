@@ -75,6 +75,81 @@ MonoBehaviour:
       BarrelClipping: 0.25
       Anamorphism: 0
   BlendHint: 0
+--- !u!1 &977760104853868140
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1011289983194127934}
+  - component: {fileID: 3872787375259492652}
+  - component: {fileID: 1739214129610522781}
+  m_Layer: 5
+  m_Name: Invincible Aura
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1011289983194127934
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977760104853868140}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7025249937117518129}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -519.5, y: -334.5}
+  m_SizeDelta: {x: 1.86, y: 2.03}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3872787375259492652
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977760104853868140}
+  m_CullTransparentMesh: 1
+--- !u!114 &1739214129610522781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 977760104853868140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  m_Color: {r: 1, g: 0, b: 0.956861, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &1346486116201088875
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,6 +1121,7 @@ MonoBehaviour:
   playerScore: 0
   isDead: 0
   respawnTimer: 0
+  isInvincible: 0
   playerCanvas: {fileID: 6546198219747128345}
   playerRigidbody2D: {fileID: -3598226789266093429}
   playerSpriteRenderer: {fileID: 2214950007718833728}
@@ -1305,6 +1381,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2908362466649985312}
+  - {fileID: 1011289983194127934}
   m_Father: {fileID: 4906775211980668335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1494,9 +1571,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerManager: {fileID: 8353948206212510349}
   playerHealthText: {fileID: 4499307867642962472}
-  playerUsernameText: {fileID: 8385258275012312323}
   respawnTimerText: {fileID: 4488653173124920334}
   redTint: {fileID: 4628446252406878051}
+  playerUsernameText: {fileID: 8385258275012312323}
+  invincibilityAura: {fileID: 1739214129610522781}
 --- !u!1 &8834062517249973693
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,14 +8,20 @@ namespace Main.Scripts.Player
     {
         [SerializeField]
         private PlayerManager playerManager;
+        
+        [Header("Screen UI")]
         [SerializeField]
         private TMP_Text playerHealthText;
         [SerializeField] 
-        private TMP_Text playerUsernameText;
-        [SerializeField]
         private TMP_Text respawnTimerText;
         [SerializeField] 
         private Image redTint;
+        
+        [Header("World space UI")]
+        [SerializeField]
+        private TMP_Text playerUsernameText;
+        [SerializeField] 
+        private Image invincibilityAura;
         
         
         private void LateUpdate()
@@ -28,6 +34,8 @@ namespace Main.Scripts.Player
             
             respawnTimerText.enabled = playerManager.isDead;
             redTint.enabled = playerManager.isDead;
+            
+            invincibilityAura.enabled = playerManager.isInvincible;
         }
     }
 }

@@ -21,16 +21,21 @@ namespace Main.Scripts.Player
         public int playerScore = 0;
         public bool isDead = false;
         public float respawnTimer = 0;
+        public bool isInvincible;
 
         [Header("Player Components")]
         [SerializeField] private Canvas playerCanvas;
         [SerializeField] private Rigidbody2D playerRigidbody2D;
         [SerializeField] private SpriteRenderer playerSpriteRenderer;
         
+        // Player Death Properties
         private const int RespawnTime = 3;
         private int _playerLayer;
         private int _terrainLayer;
         
+        // Player Respawn Properties
+        private const int InvincibilityTime = 2;
+        private float _invincibilityTimer = 0;
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -78,6 +83,15 @@ namespace Main.Scripts.Player
                 respawnTimer = 0;
                 Respawn();
             }
+
+            if (isInvincible)
+            {
+                _invincibilityTimer += Time.deltaTime;
+                playerHeath = maxHealth;
+                if (!(_invincibilityTimer >= InvincibilityTime)) return;
+                isInvincible = false;
+                _invincibilityTimer = 0;
+            }
         }
 
         private void HandleGameState(GameState state)
@@ -99,6 +113,7 @@ namespace Main.Scripts.Player
         {
             playerHeath = maxHealth;
             playerRigidbody2D.linearVelocity = Vector2.zero;
+            isInvincible = true;
             StartCoroutine(WaitForSpawnerAndRespawn());
         }
 
@@ -126,7 +141,7 @@ namespace Main.Scripts.Player
         {
             for (int i = 0; i < 32; i++) // Unity supports up to 32 layers
             {
-                if (i == _terrainLayer) continue; // Keep terrain collision
+                if (i == _terrainLayer) continue;
                 Physics2D.IgnoreLayerCollision(_playerLayer, i, ignore);
             }
         }
