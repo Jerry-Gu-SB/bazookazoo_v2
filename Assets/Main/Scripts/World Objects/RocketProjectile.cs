@@ -10,12 +10,14 @@ namespace Main.Scripts.World_Objects
     {
         public NetworkVariable<ulong> ownerId;
 
-        [Header("Rocket properties")]
-        public float speed = 20f;
-        public int enemyRocketDamage = 40;
-        public int rocketMinKnockBack = 5;
-        public int rocketMaxKnockBack = 40;
-        public float explosionRadius = 3f;
+        private const float Speed = 20f;
+        private const int RocketMinKnockBack = 5;
+        private const int RocketMaxKnockBack = 40;
+        private const float ExplosionRadius = 3f;
+
+        private const int RocketDamage = 60;
+        private const int RocketMinDamage = 10;
+        private const int RocketMaxDamage = 50;
 
         private Rigidbody2D _rb;
         private SpriteRenderer _renderer;
@@ -25,7 +27,7 @@ namespace Main.Scripts.World_Objects
         {
             _rb = GetComponent<Rigidbody2D>();
             _renderer = GetComponent<SpriteRenderer>();
-            _rb.linearVelocity = transform.right * speed;
+            _rb.linearVelocity = transform.right * Speed;
             
             GameStateManager.GameStateChanged += HandleGameState;
         }   
@@ -50,10 +52,8 @@ namespace Main.Scripts.World_Objects
                 if (collision.CompareTag("Player") && otherNetObj.NetworkObjectId != ownerId.Value)
                 {
                     // TODO: refactor this if statement
-                    PlayerManager collisionPlayerManager = collision.GetComponent<PlayerManager>();
-                    collisionPlayerManager.playerHeath -= enemyRocketDamage;
                     Rigidbody2D enemyRigidBody2D = collision.GetComponent<Rigidbody2D>();
-                    enemyRigidBody2D.AddForce(transform.right * rocketMaxKnockBack, ForceMode2D.Impulse);
+                    enemyRigidBody2D.AddForce(transform.right * RocketMaxKnockBack, ForceMode2D.Impulse);
                     
                     StartCoroutine(Explode());
                 }
@@ -75,28 +75,33 @@ namespace Main.Scripts.World_Objects
 
             Vector2 explosionCenter = transform.position;
 
-            Collider2D[] hits = Physics2D.OverlapCircleAll(explosionCenter, explosionRadius, LayerMask.GetMask("Player"));
+            Collider2D[] hits = Physics2D.OverlapCircleAll(explosionCenter, ExplosionRadius, LayerMask.GetMask("Player"));
 
             foreach (Collider2D hit in hits)
             {
-                // TODO: refactor this for loop
                 if (!hit.TryGetComponent(out NetworkObject netObj)) continue;
                 if (!hit.CompareTag("Player")) continue;
                 Rigidbody2D rb2d = hit.GetComponent<Rigidbody2D>();
                 if (!rb2d) continue;
 
-                Vector2 direction = (hit.transform.position - transform.position).normalized;
-                var distance = Vector2.Distance(hit.transform.position, transform.position);
-                var forceFactor = 1 - (distance / explosionRadius);
-                var finalForce = Mathf.Lerp(rocketMinKnockBack, rocketMaxKnockBack, forceFactor);
-                rb2d.AddForce(direction * finalForce, ForceMode2D.Impulse);
-                
+                var forceFactor = ApplyPlayerForce(hit, rb2d);
+
                 PlayerManager playerManager = hit.GetComponent<PlayerManager>();
-                playerManager.playerHeath -= enemyRocketDamage * forceFactor;  // TODO: Add a min/max clamp for these
+                playerManager.playerHeath -= Mathf.Clamp(RocketDamage * forceFactor, RocketMinDamage, RocketMaxDamage);
             }
             yield return new WaitForSeconds(.05f);
             
             DestroySelf();
+        }
+
+        private float ApplyPlayerForce(Collider2D hit, Rigidbody2D rb2d)
+        {
+            Vector2 direction = (hit.transform.position - transform.position).normalized;
+            var distance = Vector2.Distance(hit.transform.position, transform.position);
+            var forceFactor = 1 - (distance / ExplosionRadius);
+            var finalForce = Mathf.Lerp(RocketMinKnockBack, RocketMaxKnockBack, forceFactor);
+            rb2d.AddForce(direction * finalForce, ForceMode2D.Impulse);
+            return forceFactor;
         }
 
         private void DestroySelf()
