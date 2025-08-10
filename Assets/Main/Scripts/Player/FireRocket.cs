@@ -8,15 +8,20 @@ namespace Main.Scripts.Player
     {
         public GameObject rocketPrefab;
         public Transform firePoint;
+        
+        [SerializeField]
+        private PlayerManager playerManager;
 
         private void Update()
         {
             if (!IsOwner) return;
 
-            if (Input.GetMouseButtonDown(0))
+            if (!Input.GetMouseButtonDown(0))
             {
+                if (playerManager.isDead) return;
                 FireRocketServerRpc(firePoint.position, firePoint.rotation);
             }
+            
         }
 
         [ServerRpc]

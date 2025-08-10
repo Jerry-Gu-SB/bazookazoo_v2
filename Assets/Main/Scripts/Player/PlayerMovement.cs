@@ -14,6 +14,10 @@ namespace Main.Scripts.Player
         [Header("Ground Layer")]
         public LayerMask groundLayer;
         
+        [Header("Player Manager")]
+        [SerializeField]
+        private PlayerManager playerManager;
+        
         private Rigidbody2D _rb;
 
         private void Start()
@@ -23,6 +27,8 @@ namespace Main.Scripts.Player
 
         private void FixedUpdate()
         {
+            if (playerManager.isDead) return;
+            
             bool isGrounded = Physics2D.Raycast(transform.position, Vector2.down, .6f, groundLayer);
             if (_rb.linearVelocityY < 0 && !isGrounded)
             {

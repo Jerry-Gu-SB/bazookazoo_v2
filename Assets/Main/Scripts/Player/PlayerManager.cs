@@ -10,19 +10,27 @@ namespace Main.Scripts.Player
 {
     public class PlayerManager : NetworkBehaviour
     {
-        [Header("Player Properties")] 
-        public float maxHealth = 100f;
-        public float playerHeath;
-        public int playerScore = 0;
+        [Header("Player Properties")]
         public NetworkVariable<FixedString32Bytes> username = new NetworkVariable<FixedString32Bytes>(
             "",
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Owner
         );
+        public float maxHealth = 100f;
+        public float playerHeath;
+        public int playerScore = 0;
+        public bool isDead = false;
+        public float respawnTimer = 0;
 
+        [Header("Player Components")]
         [SerializeField] private Canvas playerCanvas;
         [SerializeField] private Rigidbody2D playerRigidbody2D;
-
+        [SerializeField] private SpriteRenderer playerSpriteRenderer;
+        
+        private const int RespawnTime = 3;
+        private int _playerLayer;
+        private int _terrainLayer;
+        
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -39,7 +47,11 @@ namespace Main.Scripts.Player
                 username.Value = NetworkUIManager.LocalPlayerUsername; 
             }
         }
-
+        private void Awake()
+        {
+            _playerLayer = LayerMask.NameToLayer("Player");
+            _terrainLayer = LayerMask.NameToLayer("Terrain");
+        }
         public override void OnDestroy()
         {
             GameStateManager.GameStateChanged -= HandleGameState;
@@ -50,6 +62,20 @@ namespace Main.Scripts.Player
         {
             if (playerHeath <= 0)
             {
+                isDead = true;
+            }
+            if (isDead)
+            {
+                respawnTimer += Time.deltaTime;
+
+                playerSpriteRenderer.enabled = false;
+                SetDeadCollisions(true);
+                
+                if (!(respawnTimer >= RespawnTime)) return;
+                playerSpriteRenderer.enabled = true;
+                SetDeadCollisions(false);
+                isDead = false;
+                respawnTimer = 0;
                 Respawn();
             }
         }
@@ -96,6 +122,13 @@ namespace Main.Scripts.Player
             bool isGameStart = GameStateManager.Instance.CurrentState == GameState.GameReady;
             spawnPointManager.RespawnPlayer(transform, requireUnique: isGameStart);
         }
-
+        private void SetDeadCollisions(bool ignore)
+        {
+            for (int i = 0; i < 32; i++) // Unity supports up to 32 layers
+            {
+                if (i == _terrainLayer) continue; // Keep terrain collision
+                Physics2D.IgnoreLayerCollision(_playerLayer, i, ignore);
+            }
+        }
     }
 }
