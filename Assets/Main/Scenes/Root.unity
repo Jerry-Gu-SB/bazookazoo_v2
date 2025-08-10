@@ -203,6 +203,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Networking UI
       objectReference: {fileID: 0}
+    - target: {fileID: 1174332097016231662, guid: 36d9265dd3159c94d88e9dd8c38f4afc, type: 3}
+      propertyPath: m_Name
+      value: Username Input Field
+      objectReference: {fileID: 0}
     - target: {fileID: 2086180315994934635, guid: 36d9265dd3159c94d88e9dd8c38f4afc, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -314,7 +318,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6845200894809880346, guid: 2b5d0c2e470288148b0421b23ca68116, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.53833
+      value: -10.53833
       objectReference: {fileID: 0}
     - target: {fileID: 6845200894809880346, guid: 2b5d0c2e470288148b0421b23ca68116, type: 3}
       propertyPath: m_LocalRotation.w

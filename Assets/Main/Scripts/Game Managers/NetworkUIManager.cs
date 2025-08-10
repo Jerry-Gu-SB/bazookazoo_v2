@@ -18,11 +18,15 @@ namespace Main.Scripts.Game_Managers
         [SerializeField] private Button startClientButton;
         [SerializeField] private TMP_InputField ipAddressInputField;
         [SerializeField] private TMP_InputField portInputField;
+        [SerializeField] private TMP_InputField usernameInputField;
         [SerializeField] private TMP_Text localIPDisplayText;
-
+        
         [Header("Map Selection UI Elements")]
         [SerializeField] private TMP_Text selectMapText;
         [SerializeField] private Button dustyButton;
+        
+        [Header("Public Variables")]
+        public static string LocalPlayerUsername { get; private set; } = "Player";
 
         private UnityTransport _transport;
 
@@ -48,7 +52,7 @@ namespace Main.Scripts.Game_Managers
             DisplayLocalIPAddress();
             HandleGameStateChanged(GameStateManager.Instance.CurrentState);
         }
-
+        
         private void OnEnable()
         {
             GameStateManager.GameStateChanged += HandleGameStateChanged;
@@ -68,6 +72,7 @@ namespace Main.Scripts.Game_Managers
         private void StartClient()
         {
             ApplyConnectionData();
+            ApplyPlayerUsername();
             NetworkManager.Singleton.StartClient();
             GameStateManager.Instance.TransitionToState(GameState.Connecting);
             ShowConnectingUI(false);
@@ -77,6 +82,7 @@ namespace Main.Scripts.Game_Managers
         private void StartHost()
         {
             ApplyConnectionData();
+            ApplyPlayerUsername();
             NetworkManager.Singleton.StartHost();
             GameStateManager.Instance.TransitionToState(GameState.LobbyLoading);
         }
@@ -88,6 +94,13 @@ namespace Main.Scripts.Game_Managers
             _transport.SetConnectionData(ip, port);
         }
 
+        private void ApplyPlayerUsername()
+        {
+            LocalPlayerUsername = string.IsNullOrEmpty(usernameInputField.text)
+                ? "Player"
+                : usernameInputField.text;
+        }
+
         private void ShowConnectingUI(bool show)
         {
             startClientButton.gameObject.SetActive(show);
@@ -95,6 +108,7 @@ namespace Main.Scripts.Game_Managers
             ipAddressInputField.gameObject.SetActive(show);
             portInputField.gameObject.SetActive(show);
             localIPDisplayText.gameObject.SetActive(show);
+            usernameInputField.gameObject.SetActive(show);
         }
 
         private void ShowMapSelectionUI(bool show)

@@ -3,6 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using System.Collections;
 using Main.Scripts.Game_Managers;
+using Unity.Collections;
 
 namespace Main.Scripts.Player
 {
@@ -12,6 +13,11 @@ namespace Main.Scripts.Player
         public float maxHealth = 100f;
         public float playerHeath;
         public int playerScore = 0;
+        public NetworkVariable<FixedString32Bytes> username = new NetworkVariable<FixedString32Bytes>(
+            "",
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Owner
+        );
 
         [SerializeField] private Canvas playerCanvas;
         [SerializeField] private Rigidbody2D playerRigidbody2D;
@@ -26,6 +32,10 @@ namespace Main.Scripts.Player
             if (IsClient && GameStateManager.Instance != null)
             {
                 HandleGameState(GameStateManager.Instance.CurrentState);
+            }
+            if (IsOwner)
+            {
+                username.Value = NetworkUIManager.LocalPlayerUsername; 
             }
         }
 
