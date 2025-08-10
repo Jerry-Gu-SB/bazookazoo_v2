@@ -5,7 +5,7 @@ Features to implement:
 - ~~connecting via LAN and IPv4 address~~
   - ~~do via a start menu~~
   - ~~choose a name and have it hover above the player~~
-- health packs
+- ~~health packs~~
 - respawning
   - ~~random is probably good enough. if you get spawn killed who cares.~~
   - need a death screen
