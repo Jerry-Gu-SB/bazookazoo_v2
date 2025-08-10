@@ -51,10 +51,7 @@ namespace Main.Scripts.World_Objects
             {
                 if (collision.CompareTag("Player") && otherNetObj.NetworkObjectId != ownerId.Value)
                 {
-                    // TODO: refactor this if statement
-                    Rigidbody2D enemyRigidBody2D = collision.GetComponent<Rigidbody2D>();
-                    enemyRigidBody2D.AddForce(transform.right * RocketMaxKnockBack, ForceMode2D.Impulse);
-                    
+                    ApplyForceToTarget(collision);
                     StartCoroutine(Explode());
                 }
             }
@@ -68,11 +65,24 @@ namespace Main.Scripts.World_Objects
             }
         }
 
+        private void ApplyForceToTarget(Collider2D collision)
+        {
+            Rigidbody2D enemyRigidBody2D = collision.GetComponent<Rigidbody2D>();
+            enemyRigidBody2D.AddForce(transform.right * RocketMaxKnockBack, ForceMode2D.Impulse);
+        }
+
         private IEnumerator Explode()
         {
             _exploded = true;
             _renderer.enabled = false;
+            ResolveBlastRadius();
+            yield return new WaitForSeconds(.05f);
+            
+            DestroySelf();
+        }
 
+        private void ResolveBlastRadius()
+        {
             Vector2 explosionCenter = transform.position;
 
             Collider2D[] hits = Physics2D.OverlapCircleAll(explosionCenter, ExplosionRadius, LayerMask.GetMask("Player"));
@@ -89,9 +99,6 @@ namespace Main.Scripts.World_Objects
                 PlayerManager playerManager = hit.GetComponent<PlayerManager>();
                 playerManager.playerHeath -= Mathf.Clamp(RocketDamage * forceFactor, RocketMinDamage, RocketMaxDamage);
             }
-            yield return new WaitForSeconds(.05f);
-            
-            DestroySelf();
         }
 
         private float ApplyPlayerForce(Collider2D hit, Rigidbody2D rb2d)
