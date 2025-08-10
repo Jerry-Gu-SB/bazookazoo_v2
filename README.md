@@ -6,7 +6,7 @@ Features to implement:
   - ~~do via a start menu~~
   - ~~choose a name and have it hover above the player~~
 - ~~health packs~~
-- respawning
+- ~~respawning~~
   - ~~random is probably good enough. if you get spawn killed who cares.~~
   - ~~need a death screen~~
   - ~~give player a couple seconds of invincibility on spawn~~
