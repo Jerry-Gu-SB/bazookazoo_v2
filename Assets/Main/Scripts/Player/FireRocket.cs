@@ -16,7 +16,7 @@ namespace Main.Scripts.Player
         {
             if (!IsOwner) return;
 
-            if (!Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 if (playerManager.isDead) return;
                 FireRocketServerRpc(firePoint.position, firePoint.rotation);
