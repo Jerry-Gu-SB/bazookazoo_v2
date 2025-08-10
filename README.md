@@ -11,6 +11,7 @@ Features to implement:
   - ~~need a death screen~~
   - ~~give player a couple seconds of invincibility on spawn~~
 - win conditions
+  - Players can get score upon kill
   - First to X kills
   - scoreboard
 - map design
