@@ -4,7 +4,7 @@ using Main.Scripts.Player;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Main.Scripts
+namespace Main.Scripts.World_Objects
 {
     public class RocketProjectile : NetworkBehaviour
     {

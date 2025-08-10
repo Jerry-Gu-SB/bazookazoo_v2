@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Main.Scripts
+namespace Main.Scripts.World_Objects
 {
     public class SpawnPointManager : MonoBehaviour
     {
