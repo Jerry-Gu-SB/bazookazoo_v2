@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Main.Scripts.Game_Managers
+namespace Main.Scripts.UI_Scripts
 {
     public class ScoreboardManager : MonoBehaviour
     {
