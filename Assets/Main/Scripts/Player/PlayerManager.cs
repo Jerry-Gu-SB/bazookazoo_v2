@@ -6,6 +6,7 @@ using Main.Scripts.Game_Managers;
 using Main.Scripts.UI_Scripts;
 using Main.Scripts.World_Objects;
 using Unity.Collections;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace Main.Scripts.Player
 {
@@ -53,6 +54,7 @@ namespace Main.Scripts.Player
             if (IsOwner)
             {
                 username.Value = NetworkUIManager.LocalPlayerUsername; 
+                ScoreboardManager.PlayerJoined(OwnerClientId, username.Value.ToString());
             }
         }
         private void Awake()
@@ -62,6 +64,7 @@ namespace Main.Scripts.Player
         }
         public override void OnDestroy()
         {
+            ScoreboardManager.PlayerLeft(OwnerClientId);
             GameStateManager.GameStateChanged -= HandleGameState;
             base.OnDestroy();
         }
