@@ -280,7 +280,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 563570980323185531, guid: 36d9265dd3159c94d88e9dd8c38f4afc, type: 3}
       propertyPath: m_Name
-      value: Networking UI
+      value: Global UI
       objectReference: {fileID: 0}
     - target: {fileID: 1174332097016231662, guid: 36d9265dd3159c94d88e9dd8c38f4afc, type: 3}
       propertyPath: m_Name
