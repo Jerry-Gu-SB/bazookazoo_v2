@@ -99,20 +99,21 @@ namespace Main.Scripts.World_Objects
 
                 var forceFactor = ApplyPlayerForce(hit, rb2d);
 
-                PlayerManager playerManager = hit.GetComponent<PlayerManager>();
-                if (!playerManager) continue;
+                PlayerManager hitPlayerManager = hit.GetComponent<PlayerManager>();
+                if (!hitPlayerManager) continue;
 
-                float oldHealth = playerManager.playerHeath;
+                float oldHealth = hitPlayerManager.playerHeath;
 
-                playerManager.playerHeath -= Mathf.Clamp(
+                hitPlayerManager.playerHeath -= Mathf.Clamp(
                     Mathf.RoundToInt(RocketDamage * forceFactor),
                     RocketMinDamage,
                     RocketMaxDamage
                 );
 
-                if (oldHealth > 0 && playerManager.playerHeath <= 0)
+                if (oldHealth > 0 && hitPlayerManager.playerHeath <= 0)
                 {
                     AwardKillToOwner();
+                    hitPlayerManager.playerDeaths += 1;
                 }
             }
         }
