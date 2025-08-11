@@ -227,6 +227,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80f410de0d4fa414aa305f9267ac79bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerUsername: {fileID: 1350520845983865380}
+  playerKills: {fileID: 831566331467345126}
+  playerDeaths: {fileID: 3810357864227903600}
 --- !u!1 &8280992455788344884
 GameObject:
   m_ObjectHideFlags: 0

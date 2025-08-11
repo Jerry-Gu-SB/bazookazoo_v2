@@ -1,10 +1,17 @@
+using TMPro;
 using UnityEngine;
 
 namespace Main.Scripts.UI_Scripts
 {
     public class PlayerCardManager : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        [SerializeField] 
+        private TMP_Text playerUsername;
+        [SerializeField] 
+        private TMP_Text playerKills;
+        [SerializeField] 
+        private TMP_Text playerDeaths;
+        
         void Start()
         {
         
