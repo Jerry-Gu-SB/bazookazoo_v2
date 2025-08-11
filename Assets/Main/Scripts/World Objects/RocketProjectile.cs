@@ -85,21 +85,52 @@ namespace Main.Scripts.World_Objects
         {
             Vector2 explosionCenter = transform.position;
 
-            Collider2D[] hits = Physics2D.OverlapCircleAll(explosionCenter, ExplosionRadius, LayerMask.GetMask("Player"));
+            Collider2D[] hits = Physics2D.OverlapCircleAll(
+                explosionCenter,
+                ExplosionRadius,
+                LayerMask.GetMask("Player")
+            );
 
             foreach (Collider2D hit in hits)
             {
                 if (!hit.TryGetComponent(out NetworkObject netObj)) continue;
-                if (!hit.CompareTag("Player")) continue;
                 Rigidbody2D rb2d = hit.GetComponent<Rigidbody2D>();
                 if (!rb2d) continue;
 
                 var forceFactor = ApplyPlayerForce(hit, rb2d);
 
                 PlayerManager playerManager = hit.GetComponent<PlayerManager>();
-                playerManager.playerHeath -= Mathf.Clamp(RocketDamage * forceFactor, RocketMinDamage, RocketMaxDamage);
+                if (!playerManager) continue;
+
+                float oldHealth = playerManager.playerHeath;
+
+                playerManager.playerHeath -= Mathf.Clamp(
+                    Mathf.RoundToInt(RocketDamage * forceFactor),
+                    RocketMinDamage,
+                    RocketMaxDamage
+                );
+
+                if (oldHealth > 0 && playerManager.playerHeath <= 0)
+                {
+                    AwardKillToOwner();
+                }
             }
         }
+
+        private void AwardKillToOwner()
+        {
+            if (!IsServer) return;
+
+            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ownerId.Value, out NetworkObject ownerNetObj))
+                return;
+            
+            PlayerManager ownerPlayerManager = ownerNetObj.GetComponent<PlayerManager>();
+            if (ownerPlayerManager)
+            {
+                ownerPlayerManager.playerScore += 1;
+            }
+        }
+
 
         private float ApplyPlayerForce(Collider2D hit, Rigidbody2D rb2d)
         {
