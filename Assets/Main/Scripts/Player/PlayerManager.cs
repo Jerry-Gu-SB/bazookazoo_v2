@@ -18,7 +18,8 @@ namespace Main.Scripts.Player
         );
         public float maxHealth = 100f;
         public float playerHeath;
-        public int playerScore = 0;
+        public int playerKills = 0;
+        public int playerDeaths = 0;
         public bool isDead = false;
         public float respawnTimer = 0;
         public bool isInvincible;
@@ -36,6 +37,7 @@ namespace Main.Scripts.Player
         // Player Respawn Properties
         private const int InvincibilityTime = 2;
         private float _invincibilityTimer = 0;
+        
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
@@ -105,7 +107,7 @@ namespace Main.Scripts.Player
         private void ResetPlayer()
         {
             playerHeath = maxHealth;
-            playerScore = 0;
+            playerKills = 0;
             Respawn();
         }
 

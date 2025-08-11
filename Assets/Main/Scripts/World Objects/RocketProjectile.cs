@@ -127,7 +127,7 @@ namespace Main.Scripts.World_Objects
             PlayerManager ownerPlayerManager = ownerNetObj.GetComponent<PlayerManager>();
             if (ownerPlayerManager)
             {
-                ownerPlayerManager.playerScore += 1;
+                ownerPlayerManager.playerKills += 1;
             }
         }
 
