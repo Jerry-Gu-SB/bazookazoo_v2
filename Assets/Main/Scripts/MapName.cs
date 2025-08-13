@@ -4,5 +4,6 @@ namespace Main.Scripts
     {
         public const string Lobby = "Lobby";
         public const string Dusty = "Dusty";
+        public const string Forest = "Forest";
     }
 }
