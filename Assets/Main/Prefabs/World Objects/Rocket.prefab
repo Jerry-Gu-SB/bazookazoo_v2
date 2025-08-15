@@ -80,8 +80,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1802749937
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0.98490566, b: 0.18160753, a: 1}
@@ -197,12 +197,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   ownerId:
     m_InternalValue: 0
-  speed: 20
-  selfRocketDamage: 20
-  enemyRocketDamage: 40
-  rocketMinKnockBack: 5
-  rocketMaxKnockBack: 40
-  explosionRadius: 3
 --- !u!50 &988576666371611504
 Rigidbody2D:
   serializedVersion: 5

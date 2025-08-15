@@ -23,6 +23,7 @@ namespace Main.Scripts.UI_Scripts
         [Header("Map Selection UI Elements")]
         [SerializeField] private TMP_Text selectMapText;
         [SerializeField] private Button dustyButton;
+        [SerializeField] private Button forestButton;
         
         [Header("Public Variables")]
         public static string LocalPlayerUsername { get; private set; } = "Player";
@@ -45,6 +46,11 @@ namespace Main.Scripts.UI_Scripts
             dustyButton.onClick.AddListener(() =>
             {
                 GameStateManager.Instance.SetSelectedMap(MapNames.Dusty);
+                GameStateManager.Instance.TransitionToState(GameState.MapLoading);
+            });
+            forestButton.onClick.AddListener(() =>
+            {
+                GameStateManager.Instance.SetSelectedMap(MapNames.Forest);
                 GameStateManager.Instance.TransitionToState(GameState.MapLoading);
             });
 
@@ -114,6 +120,7 @@ namespace Main.Scripts.UI_Scripts
         {
             selectMapText.gameObject.SetActive(show);
             dustyButton.gameObject.SetActive(show);
+            forestButton.gameObject.SetActive(show);
         }
 
         private void DisplayLocalIPAddress()

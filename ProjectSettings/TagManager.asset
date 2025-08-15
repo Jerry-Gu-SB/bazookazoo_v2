@@ -42,5 +42,29 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Terrain
+    uniqueID: 1273770605
+    locked: 0
+  - name: Behind Player Doodads
+    uniqueID: 3460672661
+    locked: 0
+  - name: Player
+    uniqueID: 2490405409
+    locked: 0
+  - name: Bazooka
+    uniqueID: 3647913159
+    locked: 0
+  - name: Front of Player Doodads
+    uniqueID: 3597369641
+    locked: 0
+  - name: Healthpacks
+    uniqueID: 617523881
+    locked: 0
+  - name: Rockets
+    uniqueID: 2492217359
+    locked: 0
+  - name: World UI
+    uniqueID: 1140900835
+    locked: 0
   m_RenderingLayers:
   - Default
