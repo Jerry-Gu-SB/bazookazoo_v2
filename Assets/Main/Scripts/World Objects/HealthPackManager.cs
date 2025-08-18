@@ -25,24 +25,24 @@ namespace Main.Scripts.World_Objects
 
         private void Start()
         {
-            _initialHeight = healthPackTransform.localPosition.y;
+            _initialHeight = healthPackTransform.position.y;
         }
         private void Update()
         {
             if (_goingUp)
             {
-                Vector3 newPosition = healthPackTransform.localPosition + new Vector3(0, Time.deltaTime * HoverSpeed, 0);
+                Vector3 newPosition = healthPackTransform.position + new Vector3(0, Time.deltaTime * HoverSpeed, 0);
                 healthPackTransform.position = newPosition;
-                if (healthPackTransform.localPosition.y > _initialHeight + MaxHeight)
+                if (healthPackTransform.position.y > _initialHeight + MaxHeight)
                 {
                     _goingUp = false;
                 }
             }
             else
             {
-                Vector3 newPosition = healthPackTransform.localPosition + new Vector3(0, Time.deltaTime * -HoverSpeed, 0);
+                Vector3 newPosition = healthPackTransform.position + new Vector3(0, Time.deltaTime * -HoverSpeed, 0);
                 healthPackTransform.position = newPosition;
-                if (healthPackTransform.localPosition.y < _initialHeight)
+                if (healthPackTransform.position.y < _initialHeight)
                 {
                     _goingUp = true;
                 }
