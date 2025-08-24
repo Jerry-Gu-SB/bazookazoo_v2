@@ -23,7 +23,6 @@ namespace Main.Scripts.Player
         [SerializeField] 
         private Image invincibilityAura;
         
-        
         private void LateUpdate()
         {
             playerUsernameText.text = playerManager.username.Value.ToString();

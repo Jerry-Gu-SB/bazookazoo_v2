@@ -26,5 +26,10 @@ namespace Main.Scripts.UI_Scripts
         {
             playerDeaths.text = deaths.ToString();
         }
+
+        public void SetUsername(string username)
+        {
+            playerUsername.text = username;
+        }
     }
 }

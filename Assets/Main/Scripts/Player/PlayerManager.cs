@@ -59,47 +59,13 @@ namespace Main.Scripts.Player
             ScoreboardManager.PlayerJoined(OwnerClientId, username.Value.ToString());
             playerKills.OnValueChanged += UpdateScoreBoardKills;
             playerDeaths.OnValueChanged += UpdateScoreBoardDeaths;
+            username.OnValueChanged += UpdateScoreBoardUsername;
         }
-
-        private void UpdateScoreBoardDeaths(int previousValue, int newValue)
-        {
-            if (previousValue > newValue) Debug.LogError("Death Sync Error");
-            ScoreboardManager.SetDeaths(OwnerClientId, newValue);
-        }
-
-        private void UpdateScoreBoardKills(int previousValue, int newValue)
-        {
-            if (previousValue > newValue) Debug.LogError("Kill Sync Error");
-            ScoreboardManager.SetKills(OwnerClientId, newValue);
-        }
-
-        public void AddKill()
-        {
-            if (IsOwner)
-            {
-                playerKills.Value = playerKills.Value + 1;
-            }
-        }
-
-        public void AddDeath()
-        {
-            if (IsOwner)
-            {
-                playerDeaths.Value = playerDeaths.Value + 1;
-            }
-        }
+        
         private void Awake()
         {
             _playerLayer = LayerMask.NameToLayer("Player");
             _terrainLayer = LayerMask.NameToLayer("Terrain");
-        }
-        public override void OnDestroy()
-        {
-            ScoreboardManager.PlayerLeft(OwnerClientId);
-            GameStateManager.GameStateChanged -= HandleGameState;
-            playerKills.OnValueChanged -= UpdateScoreBoardKills;
-            playerDeaths.OnValueChanged -= UpdateScoreBoardDeaths;
-            base.OnDestroy();
         }
 
         private void Update()
@@ -183,6 +149,46 @@ namespace Main.Scripts.Player
                 if (i == _terrainLayer) continue;
                 Physics2D.IgnoreLayerCollision(_playerLayer, i, ignore);
             }
+        }
+        
+        private void UpdateScoreBoardUsername(FixedString32Bytes previousValue, FixedString32Bytes newValue)
+        {
+            ScoreboardManager.SetUsername(OwnerClientId, newValue.ToString());
+        }
+        private void UpdateScoreBoardKills(int previousValue, int newValue)
+        {
+            if (previousValue > newValue) Debug.LogError("Kill Sync Error");
+            ScoreboardManager.SetKills(OwnerClientId, newValue);
+        }
+        private void UpdateScoreBoardDeaths(int previousValue, int newValue)
+        {
+            if (previousValue > newValue) Debug.LogError("Death Sync Error");
+            ScoreboardManager.SetDeaths(OwnerClientId, newValue);
+        }
+        public void AddKill()
+        {
+            if (IsOwner)
+            {
+                playerKills.Value += 1;
+            }
+        }
+
+        public void AddDeath()
+        {
+            if (IsOwner)
+            {
+                playerDeaths.Value += 1;
+            }
+        }
+        
+        public override void OnDestroy()
+        {
+            ScoreboardManager.PlayerLeft(OwnerClientId);
+            GameStateManager.GameStateChanged -= HandleGameState;
+            playerKills.OnValueChanged -= UpdateScoreBoardKills;
+            playerDeaths.OnValueChanged -= UpdateScoreBoardDeaths;
+            username.OnValueChanged -= UpdateScoreBoardUsername;
+            base.OnDestroy();
         }
     }
 }

@@ -36,11 +36,11 @@ namespace Main.Scripts.UI_Scripts
                 scoreboard.SetActive(false);                
         }
         
-        public static void PlayerJoined(ulong playerID, string userName)
+        public static void PlayerJoined(ulong playerID, string username)
         {
             PlayerCardManager newCard = Instantiate(_instance.playerCardPrefab, _instance.playerCardParent).GetComponent<PlayerCardManager>();
             _instance._playerCards.Add(playerID, newCard);
-            newCard.Initialize(userName);
+            newCard.Initialize(username);
         }
 
         public static void PlayerLeft(ulong playerID)
@@ -115,6 +115,41 @@ namespace Main.Scripts.UI_Scripts
         private void SetKillsInternal(ulong playerID, int kills)
         {
             _playerCards[playerID].SetKills(kills);
+        }
+        
+        public static void SetUsername(ulong playerID, string username)
+        {
+            // Client wants to request update from server
+            if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+            {
+                _instance.SetUsernameServerRpc(playerID, username);
+            }
+            else
+            {
+                // If server, just apply directly
+                _instance.SetUsernameInternal(playerID, username);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetUsernameServerRpc(ulong playerID, string username)
+        {
+            // Update all clients
+            SetUsernameClientRpc(playerID, username);
+        
+            // Apply on server too
+            SetUsernameInternal(playerID, username);
+        }
+
+        [ClientRpc]
+        private void SetUsernameClientRpc(ulong playerID, string username)
+        {
+            SetUsernameInternal(playerID, username);
+        }
+
+        private void SetUsernameInternal(ulong playerID, string username)
+        {
+            _playerCards[playerID].SetUsername(username);
         }
     }
 }
