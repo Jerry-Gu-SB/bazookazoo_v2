@@ -117,8 +117,6 @@ namespace Main.Scripts.World_Objects
                         return;
             
                     PlayerManager ownerPlayerManager = ownerNetObj.GetComponent<PlayerManager>();
-                    
-                    Debug.Log("HitNetworkObject ClientID: " + hitNetworkObject.NetworkObjectId + " This Owner ClientID: " + shooterNetworkID);
                     if (hitNetworkObject.NetworkObjectId != shooterNetworkID.Value)
                     {
                         ownerPlayerManager.AddKill();
