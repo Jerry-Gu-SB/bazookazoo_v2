@@ -54,8 +54,8 @@ namespace Main.Scripts.Player
             if (IsOwner)
             {
                 username.Value = NetworkUIManager.LocalPlayerUsername; 
-                ScoreboardManager.PlayerJoined(OwnerClientId, username.Value.ToString());
             }
+            ScoreboardManager.PlayerJoined(OwnerClientId, username.Value.ToString());
         }
         private void Awake()
         {

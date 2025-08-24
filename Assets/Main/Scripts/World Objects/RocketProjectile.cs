@@ -1,6 +1,7 @@
 using System.Collections;
 using Main.Scripts.Game_Managers;
 using Main.Scripts.Player;
+using Main.Scripts.UI_Scripts;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -93,7 +94,7 @@ namespace Main.Scripts.World_Objects
 
             foreach (Collider2D hit in hits)
             {
-                if (!hit.TryGetComponent(out NetworkObject netObj)) continue;
+                if (!hit.TryGetComponent(out NetworkObject hitNetworkObject)) continue;
                 Rigidbody2D rb2d = hit.GetComponent<Rigidbody2D>();
                 if (!rb2d) continue;
 
@@ -114,6 +115,7 @@ namespace Main.Scripts.World_Objects
                 {
                     AwardKillToOwner();
                     hitPlayerManager.playerDeaths += 1;
+                    ScoreboardManager.SetDeaths(hitNetworkObject.OwnerClientId, hitPlayerManager.playerDeaths);
                 }
             }
         }
@@ -129,6 +131,7 @@ namespace Main.Scripts.World_Objects
             if (ownerPlayerManager)
             {
                 ownerPlayerManager.playerKills += 1;
+                ScoreboardManager.SetKills(ownerNetObj.OwnerClientId, ownerPlayerManager.playerKills);
             }
         }
 
