@@ -13,7 +13,7 @@ Features to implement:
 - win conditions
   - ~~Players can get score upon kill~~
   - First to X kills
-  - scoreboard
+  - ~~scoreboard~~
 - map design
   - maybe different terrains. nothing crazy though.
 - some different weapons
