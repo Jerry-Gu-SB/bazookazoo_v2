@@ -113,27 +113,20 @@ namespace Main.Scripts.World_Objects
 
                 if (oldHealth > 0 && hitPlayerManager.playerHeath <= 0)
                 {
-                    AwardKillToOwner();
+                    if (!IsServer) return;
+                    if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ownerId.Value, out NetworkObject ownerNetObj))
+                        return;
+            
+                    PlayerManager ownerPlayerManager = ownerNetObj.GetComponent<PlayerManager>();
+                    if (ownerPlayerManager != hitPlayerManager)
+                    {
+                        ownerPlayerManager.AddKill();
+                    }
                     hitPlayerManager.AddDeath();
                 }
             }
         }
-
-        private void AwardKillToOwner()
-        {
-            if (!IsServer) return;
-
-            if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ownerId.Value, out NetworkObject ownerNetObj))
-                return;
-            
-            PlayerManager ownerPlayerManager = ownerNetObj.GetComponent<PlayerManager>();
-            if (ownerPlayerManager)
-            {
-                ownerPlayerManager.AddKill();
-            }
-        }
-
-
+        
         private float ApplyPlayerForce(Collider2D hit, Rigidbody2D rb2d)
         {
             Vector2 direction = (hit.transform.position - transform.position).normalized;
