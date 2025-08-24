@@ -114,8 +114,7 @@ namespace Main.Scripts.World_Objects
                 if (oldHealth > 0 && hitPlayerManager.playerHeath <= 0)
                 {
                     AwardKillToOwner();
-                    hitPlayerManager.playerDeaths += 1;
-                    ScoreboardManager.SetDeaths(hitNetworkObject.OwnerClientId, hitPlayerManager.playerDeaths);
+                    hitPlayerManager.AddDeath();
                 }
             }
         }
@@ -130,8 +129,7 @@ namespace Main.Scripts.World_Objects
             PlayerManager ownerPlayerManager = ownerNetObj.GetComponent<PlayerManager>();
             if (ownerPlayerManager)
             {
-                ownerPlayerManager.playerKills += 1;
-                ScoreboardManager.SetKills(ownerNetObj.OwnerClientId, ownerPlayerManager.playerKills);
+                ownerPlayerManager.AddKill();
             }
         }
 

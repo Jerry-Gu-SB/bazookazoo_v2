@@ -18,10 +18,11 @@ namespace Main.Scripts.Player
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Owner
         );
+        public NetworkVariable<int> playerKills = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> playerDeaths = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        
         public float maxHealth = 100f;
         public float playerHeath;
-        public int playerKills = 0;
-        public int playerDeaths = 0;
         public bool isDead = false;
         public float respawnTimer = 0;
         public bool isInvincible;
@@ -56,6 +57,36 @@ namespace Main.Scripts.Player
                 username.Value = NetworkUIManager.LocalPlayerUsername; 
             }
             ScoreboardManager.PlayerJoined(OwnerClientId, username.Value.ToString());
+            playerKills.OnValueChanged += UpdateScoreBoardKills;
+            playerDeaths.OnValueChanged += UpdateScoreBoardDeaths;
+        }
+
+        private void UpdateScoreBoardDeaths(int previousValue, int newValue)
+        {
+            if (previousValue > newValue) Debug.LogError("Death Sync Error");
+            ScoreboardManager.SetDeaths(OwnerClientId, newValue);
+        }
+
+        private void UpdateScoreBoardKills(int previousValue, int newValue)
+        {
+            if (previousValue > newValue) Debug.LogError("Kill Sync Error");
+            ScoreboardManager.SetKills(OwnerClientId, newValue);
+        }
+
+        public void AddKill()
+        {
+            if (IsOwner)
+            {
+                playerKills.Value = playerKills.Value + 1;
+            }
+        }
+
+        public void AddDeath()
+        {
+            if (IsOwner)
+            {
+                playerDeaths.Value = playerDeaths.Value + 1;
+            }
         }
         private void Awake()
         {
@@ -66,6 +97,8 @@ namespace Main.Scripts.Player
         {
             ScoreboardManager.PlayerLeft(OwnerClientId);
             GameStateManager.GameStateChanged -= HandleGameState;
+            playerKills.OnValueChanged -= UpdateScoreBoardKills;
+            playerDeaths.OnValueChanged -= UpdateScoreBoardDeaths;
             base.OnDestroy();
         }
 
@@ -111,7 +144,7 @@ namespace Main.Scripts.Player
         private void ResetPlayer()
         {
             playerHeath = maxHealth;
-            playerKills = 0;
+            playerKills.Reset();
             Respawn();
         }
 
