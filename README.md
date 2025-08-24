@@ -18,5 +18,7 @@ Features to implement:
   - maybe different terrains. nothing crazy though.
 - some different weapons
   - will have to refactor the player to make the weapon a prefab...
+  - Weapon spawner (like Raze)
 - some basic pixel art
+- SFX
 - UI art revamp
