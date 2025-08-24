@@ -32,7 +32,7 @@ namespace Main.Scripts.Player
             netObj.Spawn(true);
 
             RocketProjectile rp = rocket.GetComponent<RocketProjectile>();
-            rp.ownerId.Value = this.GetComponent<NetworkObject>().NetworkObjectId;
+            rp.shooterNetworkID.Value = this.GetComponent<NetworkObject>().NetworkObjectId;
         }
     }
 }

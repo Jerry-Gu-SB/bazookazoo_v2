@@ -9,7 +9,7 @@ namespace Main.Scripts.World_Objects
 {
     public class RocketProjectile : NetworkBehaviour
     {
-        public NetworkVariable<ulong> ownerId;
+        public NetworkVariable<ulong> shooterNetworkID;
 
         private const float Speed = 20f;
         private const int RocketMinKnockBack = 5;
@@ -50,7 +50,7 @@ namespace Main.Scripts.World_Objects
             if (_exploded) return;
             if (collision.TryGetComponent(out NetworkObject otherNetObj))
             {
-                if (collision.CompareTag("Player") && otherNetObj.NetworkObjectId != ownerId.Value)
+                if (collision.CompareTag("Player") && otherNetObj.NetworkObjectId != shooterNetworkID.Value)
                 {
                     ApplyForceToTarget(collision);
                     StartCoroutine(Explode());
@@ -113,12 +113,13 @@ namespace Main.Scripts.World_Objects
 
                 if (oldHealth > 0 && hitPlayerManager.playerHeath <= 0)
                 {
-                    if (!IsServer) return;
-                    if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(ownerId.Value, out NetworkObject ownerNetObj))
+                    if (!NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(shooterNetworkID.Value, out NetworkObject ownerNetObj))
                         return;
             
                     PlayerManager ownerPlayerManager = ownerNetObj.GetComponent<PlayerManager>();
-                    if (ownerPlayerManager != hitPlayerManager)
+                    
+                    Debug.Log("HitNetworkObject ClientID: " + hitNetworkObject.NetworkObjectId + " This Owner ClientID: " + shooterNetworkID);
+                    if (hitNetworkObject.NetworkObjectId != shooterNetworkID.Value)
                     {
                         ownerPlayerManager.AddKill();
                     }
