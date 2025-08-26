@@ -68,6 +68,17 @@ namespace Main.Scripts.Player
             _terrainLayer = LayerMask.NameToLayer("Terrain");
         }
 
+        private void Start()
+        {
+            // Syncs client scoreboard if they spawn in late
+            if (IsClient)
+            {
+                UpdateScoreBoardUsername(username.Value.ToString(), username.Value.ToString());
+                UpdateScoreBoardKills(playerKills.Value, playerKills.Value);
+                UpdateScoreBoardDeaths(playerDeaths.Value, playerDeaths.Value);
+            }
+        }
+
         private void Update()
         {
             if (playerHeath <= 0)
