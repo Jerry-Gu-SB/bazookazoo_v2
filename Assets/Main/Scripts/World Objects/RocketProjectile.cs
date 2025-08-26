@@ -121,7 +121,6 @@ namespace Main.Scripts.World_Objects
                     {
                         ownerPlayerManager.AddKill();
                     }
-                    hitPlayerManager.AddDeath();
                 }
             }
         }

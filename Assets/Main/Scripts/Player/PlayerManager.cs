@@ -82,39 +82,43 @@ namespace Main.Scripts.Player
 
         private void Update()
         {
-            if (playerHeath <= 0)
+            if (playerHeath <= 0 && !isDead)
             {
-                isDead = true;
+                HandlePlayerDeath();
             }
+            
             if (isDead)
             {
                 respawnTimer += Time.deltaTime;
-
-                var color = playerSpriteRenderer.color;
-                color.a = .5f;
-                playerSpriteRenderer.color = color;
-                
-                playerCircleCollider2D.enabled = false;
-                SetDeadCollisions(true);
-                
-                if (!(respawnTimer >= RespawnTime)) return;
-                playerCircleCollider2D.enabled = true;
-                color.a = 1f;
-                playerSpriteRenderer.color = color;
-                SetDeadCollisions(false);
-                isDead = false;
-                respawnTimer = 0;
-                Respawn();
+                if (respawnTimer >= RespawnTime)
+                {
+                    respawnTimer = 0;
+                    Respawn();
+                }
             }
 
             if (isInvincible)
             {
-                _invincibilityTimer += Time.deltaTime;
                 playerHeath = maxHealth;
-                if (!(_invincibilityTimer >= InvincibilityTime)) return;
-                isInvincible = false;
-                _invincibilityTimer = 0;
+                _invincibilityTimer += Time.deltaTime;
+                if (_invincibilityTimer >= InvincibilityTime)
+                {
+                    isInvincible = false;
+                    _invincibilityTimer = 0;
+                }
             }
+        }
+
+        private void HandlePlayerDeath()
+        {
+            isDead = true;
+            AddDeath();
+            Color color = playerSpriteRenderer.color;
+            color.a = .5f;
+            playerSpriteRenderer.color = color;
+            
+            playerCircleCollider2D.enabled = false;
+            SetDeadCollisions(true);
         }
 
         private void HandleGameState(GameState state)
@@ -137,6 +141,16 @@ namespace Main.Scripts.Player
             playerHeath = maxHealth;
             playerRigidbody2D.linearVelocity = Vector2.zero;
             isInvincible = true;
+            
+            playerCircleCollider2D.enabled = true;
+
+            Color color = playerSpriteRenderer.color;
+            color.a = 1f;
+            playerSpriteRenderer.color = color;
+            
+            SetDeadCollisions(false);
+            isDead = false;
+            
             StartCoroutine(WaitForSpawnerAndRespawn());
         }
 
@@ -156,9 +170,10 @@ namespace Main.Scripts.Player
                 }
                 yield return null;
             }
-
+            playerRigidbody2D.interpolation = RigidbodyInterpolation2D.None;
             bool isGameStart = GameStateManager.Instance.CurrentState == GameState.GameReady;
             spawnPointManager.RespawnPlayer(transform, requireUnique: isGameStart);
+            playerRigidbody2D.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
         private void SetDeadCollisions(bool ignore)
         {
