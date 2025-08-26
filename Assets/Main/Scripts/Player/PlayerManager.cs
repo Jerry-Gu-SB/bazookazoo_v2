@@ -30,6 +30,7 @@ namespace Main.Scripts.Player
         [Header("Player Components")]
         [SerializeField] private Canvas playerCanvas;
         [SerializeField] private Rigidbody2D playerRigidbody2D;
+        [SerializeField] private CircleCollider2D playerCircleCollider2D;
         [SerializeField] private SpriteRenderer playerSpriteRenderer;
         
         // Player Death Properties
@@ -89,11 +90,17 @@ namespace Main.Scripts.Player
             {
                 respawnTimer += Time.deltaTime;
 
-                playerSpriteRenderer.enabled = false;
+                var color = playerSpriteRenderer.color;
+                color.a = .5f;
+                playerSpriteRenderer.color = color;
+                
+                playerCircleCollider2D.enabled = false;
                 SetDeadCollisions(true);
                 
                 if (!(respawnTimer >= RespawnTime)) return;
-                playerSpriteRenderer.enabled = true;
+                playerCircleCollider2D.enabled = true;
+                color.a = 1f;
+                playerSpriteRenderer.color = color;
                 SetDeadCollisions(false);
                 isDead = false;
                 respawnTimer = 0;

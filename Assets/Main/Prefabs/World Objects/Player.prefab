@@ -1147,6 +1147,7 @@ MonoBehaviour:
   isInvincible: 0
   playerCanvas: {fileID: 6546198219747128345}
   playerRigidbody2D: {fileID: -3598226789266093429}
+  playerCircleCollider2D: {fileID: 3288366715517346822}
   playerSpriteRenderer: {fileID: 2214950007718833728}
 --- !u!114 &3866731337991339739
 MonoBehaviour:
@@ -1239,7 +1240,7 @@ Transform:
   m_GameObject: {fileID: 8007591009971865178}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.191745, y: 0.7997875, z: -9.180666}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
