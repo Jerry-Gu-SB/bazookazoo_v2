@@ -27,7 +27,7 @@ namespace Main.Scripts.World_Objects
         private void Start()
         {
             _rb = GetComponent<Rigidbody2D>();
-            _renderer = GetComponent<SpriteRenderer>();
+            _renderer = GetComponentInChildren<SpriteRenderer>();
             _rb.linearVelocity = transform.right * Speed;
             
             GameStateManager.GameStateChanged += HandleGameState;

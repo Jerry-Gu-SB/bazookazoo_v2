@@ -15,7 +15,7 @@ namespace Main.Scripts.Player
         private void Update()
         {
             barrelSpriteRenderer.enabled = !playerManager.isDead;
-            firePointSpriteRenderer.enabled = !playerManager.isDead;
+            // firePointSpriteRenderer.enabled = !playerManager.isDead;
         }
     }
 }
