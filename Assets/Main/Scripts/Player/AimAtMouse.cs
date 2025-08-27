@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Main.Scripts.Player
 {
-    public class AimAtMouse : NetworkBehaviour
+    public class AimAtMouse : MonoBehaviour
     {
         [SerializeField] private Camera mainCamera;
         [SerializeField] private float rotationSmoothSpeed = 10f; // Adjust as needed
@@ -14,8 +14,6 @@ namespace Main.Scripts.Player
         
         private void Update()
         {
-            if (!IsOwner || !IsSpawned) return;
-
             Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = (mouseWorldPos - transform.position);
             float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
