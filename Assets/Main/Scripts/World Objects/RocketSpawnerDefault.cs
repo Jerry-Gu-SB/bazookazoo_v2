@@ -1,3 +1,4 @@
+using System;
 using Main.Scripts.Player;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ namespace Main.Scripts.World_Objects
     public class RocketSpawnerDefault : MonoBehaviour
     {
         [Header("Weapon Change Components")]
+        private BazookaTypes _currentBazookaType = BazookaTypes.Default;
         [SerializeField] private GameObject rocketPrefab;
         private const float FireRate = .01f;
         private const float ReloadSpeed = 2f;
@@ -68,22 +70,27 @@ namespace Main.Scripts.World_Objects
                 bazookaSpriteCollider.enabled = true;
             }
         }
-    
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.CompareTag("Player"))
             {
                 FireRocket fireRocket = collision.gameObject.GetComponent<FireRocket>();
-                SetFireRocketProperties(fireRocket);
+                if (fireRocket.GetCurrentBazookaType() == _currentBazookaType)
+                {
+                    fireRocket.SetCurrentAmmoStock(Math.Min(fireRocket.GetAmmoStock() + fireRocket.GetMaxAmmoStock() / 2, MaxAmmoStock));
+                }
+                else
+                {
+                    SetFireRocketProperties(fireRocket);
+                }
                 _respawning = true;
             }
         }
-
         private void SetFireRocketProperties(FireRocket fireRocket)
         {
             fireRocket.SetBazookaSprite(bazookaSpriteRenderer.sprite);
             fireRocket.SetFireRate(FireRate);
-            fireRocket.SetAmmoStock(MaxAmmoStock);
+            fireRocket.SetMaxAmmoStock(MaxAmmoStock);
             fireRocket.SetClipSize(ClipSize);
             fireRocket.SetFireRate(FireRate);
             fireRocket.SetReloadSpeed(ReloadSpeed);
