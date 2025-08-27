@@ -77,7 +77,7 @@ namespace Main.Scripts.World_Objects
                 FireRocket fireRocket = collision.gameObject.GetComponent<FireRocket>();
                 if (fireRocket.GetCurrentBazookaType() == _currentBazookaType)
                 {
-                    fireRocket.SetCurrentAmmoStock(Math.Min(fireRocket.GetAmmoStock() + fireRocket.GetMaxAmmoStock() / 2, MaxAmmoStock));
+                    fireRocket.SetCurrentAmmoStock(Math.Min(fireRocket.GetCurrentAmmoStock() + fireRocket.GetMaxAmmoStock() / 2, MaxAmmoStock));
                 }
                 else
                 {
@@ -91,7 +91,7 @@ namespace Main.Scripts.World_Objects
             fireRocket.SetBazookaSprite(bazookaSpriteRenderer.sprite);
             fireRocket.SetFireRate(FireRate);
             fireRocket.SetMaxAmmoStock(MaxAmmoStock);
-            fireRocket.SetClipSize(ClipSize);
+            fireRocket.SetClipMaxSize(ClipSize);
             fireRocket.SetFireRate(FireRate);
             fireRocket.SetReloadSpeed(ReloadSpeed);
             fireRocket.SetRocketPrefab(rocketPrefab);

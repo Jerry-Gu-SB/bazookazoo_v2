@@ -91,17 +91,22 @@ namespace Main.Scripts.Player
             }
         }
 
+        public int GetCurrentAmmoStock()
+        {
+            return _currentAmmoStock;
+        }
         public int GetMaxAmmoStock()
         {
             return _maxAmmoStock;
         }
-        public int GetAmmoStock()
-        {
-            return _currentAmmoStock;
-        }
         public int GetCurrentClip()
         {
             return _currentClip;
+        }
+
+        public int GetMaxClipSize()
+        {
+            return _clipMaxSize;
         }
         public BazookaTypes GetCurrentBazookaType()
         {
@@ -123,7 +128,12 @@ namespace Main.Scripts.Player
         {
             _reloadSpeed = newSpeed;
         }
-        public void SetClipSize(int newClipSize)
+
+        public void SetCurrentClipSize(int newCurrentClipSize)
+        {
+            _currentClip = newCurrentClipSize;
+        }
+        public void SetClipMaxSize(int newClipSize)
         {
             _clipMaxSize = newClipSize;
         }

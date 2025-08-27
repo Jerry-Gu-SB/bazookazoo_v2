@@ -6,8 +6,11 @@ namespace Main.Scripts.Player
 {
     public class PlayerUIManager : MonoBehaviour
     {
+        [Header("Player Components")]
         [SerializeField]
         private PlayerManager playerManager;
+        [SerializeField]
+        private FireRocket fireRocket;
         
         [Header("Screen UI")]
         [SerializeField]
@@ -16,6 +19,10 @@ namespace Main.Scripts.Player
         private TMP_Text respawnTimerText;
         [SerializeField] 
         private Image redTint;
+        [SerializeField]
+        private TMP_Text currentClip;
+        [SerializeField]
+        private TMP_Text currentAmmoStock;
         
         [Header("World space UI")]
         [SerializeField]
@@ -29,6 +36,9 @@ namespace Main.Scripts.Player
             playerHealthText.text = "Health: " + playerManager.playerHeath.ToString("F1");
             respawnTimerText.text = "Respawning in: " + playerManager.respawnTimer.ToString("F3");
 
+            currentClip.text = fireRocket.GetCurrentClip().ToString();
+            currentAmmoStock.text = fireRocket.GetCurrentAmmoStock().ToString();
+            
             playerUsernameText.enabled = !playerManager.isDead;
             
             respawnTimerText.enabled = playerManager.isDead;

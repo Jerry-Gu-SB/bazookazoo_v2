@@ -32,6 +32,7 @@ namespace Main.Scripts.Player
         [SerializeField] private Rigidbody2D playerRigidbody2D;
         [SerializeField] private CircleCollider2D playerCircleCollider2D;
         [SerializeField] private SpriteRenderer playerSpriteRenderer;
+        [SerializeField] private FireRocket playerFireRocket;
         
         // Player Death Properties
         private const int RespawnTime = 3;
@@ -147,6 +148,9 @@ namespace Main.Scripts.Player
             Color color = playerSpriteRenderer.color;
             color.a = 1f;
             playerSpriteRenderer.color = color;
+            
+            playerFireRocket.SetCurrentClipSize(playerFireRocket.GetMaxClipSize());
+            playerFireRocket.SetCurrentAmmoStock(playerFireRocket.GetMaxAmmoStock());
             
             SetDeadCollisions(false);
             isDead = false;
