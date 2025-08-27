@@ -17,6 +17,11 @@ namespace Main.Scripts.Player
         private float _fireRate = .5f;
         private float _fireTimer = 0;
         private bool _hasFired = false;
+        private float _reloadSpeed = 2f;
+        private float _clipSize = 4;
+        private float _currentAmmo = 4;
+        private float _maxAmmoStock = 20;
+        private float currentAmmoStock = 20;
 
         private void Update()
         {
@@ -53,25 +58,29 @@ namespace Main.Scripts.Player
                 }
             }
         }
-
         public void SetFireRate(float fireRate)
         {
             _fireRate = fireRate;
         }
-
         public void SetBazookaSprite(Sprite bazookaSprite)
         {
             bazookaSpriteRenderer.sprite = bazookaSprite;
         }
-
-        public float GetFireRate()
+        public void SetReloadSpeed(float newSpeed)
         {
-            return _fireRate;
+            _reloadSpeed = newSpeed;
         }
-
-        public SpriteRenderer GetBazookaSpriteRenderer()
+        public void SetClipSize(int newClipSize)
         {
-            return bazookaSpriteRenderer;
+            _clipSize = newClipSize;
+        }
+        public void SetAmmoStock(int newAmmoStock)
+        {
+            _maxAmmoStock = newAmmoStock;
+        }
+        public void SetRocketPrefab(GameObject rocketPrefab)
+        {
+            this.rocketPrefab = rocketPrefab;
         }
     }
 }
