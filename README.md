@@ -16,9 +16,33 @@ Features to implement:
   - ~~scoreboard~~
 - map design
   - maybe different terrains. nothing crazy though.
-- some different weapons
-  - will have to refactor the player to make the weapon a prefab...
-  - Weapon spawner (like Raze)
-- some basic pixel art
-- SFX
-- UI art revamp
+- some different weapons (functionality is finished, now just need to create the actual different weapons including art, numbers, sfx, etc.)
+  - ~~will have to refactor the player to make the weapon a prefab...~~
+  - ~~Weapon spawner (like Raze)~~
+  - ~~Reloading and clip size~~
+- Art:
+  - Player models
+  - Different weapons
+  - Different rockets
+  - Spawner ground thing
+  - UI
+  - Weapon Spawner
+  - Background parallax
+- Animations:
+  - All rocket recolors
+  - All bazooka recolors
+  - All bazooka reloads
+  - Explosions
+- SFX:
+  - Reload
+  - Shooting
+  - Weapon pickup
+  - Healthpack pickup
+  - Player ground foley
+  - Explosion
+  - Death
+  - Win
+  - Button hover
+  - Button press
+- Game countdown and transitions
+- Killstreak announcements
