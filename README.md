@@ -1,6 +1,6 @@
-# bazookazoo_v2
+# Bazookazoo
 
-Features to implement:
+## Features to implement:
 
 - ~~connecting via LAN and IPv4 address~~
   - ~~do via a start menu~~
@@ -54,3 +54,8 @@ Features to implement:
 - BGM: Waterflame!
 - Game countdown and transitions
 - Killstreak announcements
+
+## Bugs:
+- Respawning is completely messed up. Players spawn on top of each other, get launched, and all the player properties get completely jumbled on respawn.
+- Client kills are not registering sometimes
+- Client rockets will explode sometimes instantly if moving left and shooting
