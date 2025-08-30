@@ -12,8 +12,12 @@ Features to implement:
   - ~~give player a couple seconds of invincibility on spawn~~
 - win conditions
   - ~~Players can get score upon kill~~
-  - Variable score system
-  - First to X kills
+  - Game Modes:
+    - First to X kills
+    - Beast of the Hill
+    - Timed Survival
+    - Capture the flag (but you get points for holding a flag)
+    - Invisible Hunters (everyone is invisible except when they fire, they decloak for 2 seconds)
   - ~~scoreboard~~
 - map design
   - maybe different terrains. nothing crazy though.
@@ -45,5 +49,6 @@ Features to implement:
   - Win
   - Button hover
   - Button press
+- BGM: Waterflame!
 - Game countdown and transitions
 - Killstreak announcements
