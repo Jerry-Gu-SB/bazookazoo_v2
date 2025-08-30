@@ -89,6 +89,7 @@ namespace Main.Scripts.World_Objects
         }
         private void SetFireRocketProperties(FireRocket fireRocket)
         {
+            fireRocket.SetBazookaType(BazookaTypes.Default);
             fireRocket.SetBazookaSprite(bazookaSpriteRenderer.sprite);
             fireRocket.SetFireRate(FireRate);
             fireRocket.SetMaxAmmoStock(MaxAmmoStock);
