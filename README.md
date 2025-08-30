@@ -18,6 +18,7 @@ Features to implement:
     - Beast of the Hill
     - Timed Survival
     - Capture the flag (but you get points for holding a flag)
+  - Mutations
     - Invisible Hunters (everyone is invisible except when they fire, they decloak for 2 seconds)
   - ~~scoreboard~~
 - map design
