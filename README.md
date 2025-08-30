@@ -14,6 +14,7 @@ Features to implement:
   - ~~Players can get score upon kill~~
   - Game Modes:
     - First to X kills
+    - Stock mode
     - Beast of the Hill
     - Timed Survival
     - Capture the flag (but you get points for holding a flag)
