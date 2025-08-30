@@ -8,6 +8,8 @@ namespace Main.Scripts.UI_Scripts
         [SerializeField]
         private TMP_Text playerUsername;
         [SerializeField] 
+        private TMP_Text playerScore;
+        [SerializeField]
         private TMP_Text playerKills;
         [SerializeField] 
         private TMP_Text playerDeaths;
@@ -17,6 +19,7 @@ namespace Main.Scripts.UI_Scripts
             playerUsername.text = username;
             playerKills.text = "0";
             playerDeaths.text = "0";
+            playerScore.text = "0";
         }
         public void SetKills(int kills)
         {
@@ -26,10 +29,14 @@ namespace Main.Scripts.UI_Scripts
         {
             playerDeaths.text = deaths.ToString();
         }
-
         public void SetUsername(string username)
         {
             playerUsername.text = username;
+        }
+
+        public int GetScore()
+        {
+            return int.Parse(playerScore.text);
         }
     }
 }

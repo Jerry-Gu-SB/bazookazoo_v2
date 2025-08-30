@@ -1,6 +1,11 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using Object = System.Object;
 
 namespace Main.Scripts.UI_Scripts
 {
@@ -12,9 +17,9 @@ namespace Main.Scripts.UI_Scripts
         private GameObject playerCardPrefab;
         [SerializeField] 
         private Transform playerCardParent;
-        [SerializeField]
+        [SerializeField] 
         private GameObject scoreboard;
-        
+
         private Dictionary<ulong, PlayerCardManager> _playerCards = new Dictionary<ulong, PlayerCardManager>();
 
         private void Awake()
@@ -24,6 +29,7 @@ namespace Main.Scripts.UI_Scripts
                 Destroy(this);
                 return;
             }
+
             _instance = this;
             scoreboard.SetActive(false);
         }
@@ -32,124 +38,141 @@ namespace Main.Scripts.UI_Scripts
         {
             if (Input.GetKeyDown(KeyCode.Tab))
                 scoreboard.SetActive(true);
+
             if (Input.GetKeyUp(KeyCode.Tab))
-                scoreboard.SetActive(false);                
+                scoreboard.SetActive(false);
+            ReorderScoreboard();
         }
-        
-        public static void PlayerJoined(ulong playerID, string username)
+
+        private void ReorderScoreboard()
         {
-            PlayerCardManager newCard = Instantiate(_instance.playerCardPrefab, _instance.playerCardParent).GetComponent<PlayerCardManager>();
-            _instance._playerCards.Add(playerID, newCard);
+            var sorted = _playerCards
+                .OrderByDescending(pair => pair.Value.GetScore())
+                .ToList();
+
+            int index = 0;
+            foreach (var kvp in sorted)
+            {
+                kvp.Value.transform.SetSiblingIndex(index);
+                index++;
+            }
+        }
+
+        public static void PlayerJoined(ulong playerOwnerClientID, string username)
+        {
+            PlayerCardManager newCard = Instantiate(_instance.playerCardPrefab, _instance.playerCardParent)
+                .GetComponent<PlayerCardManager>();
+            _instance._playerCards.Add(playerOwnerClientID, newCard);
             newCard.Initialize(username);
         }
 
-        public static void PlayerLeft(ulong playerID)
+        public static void PlayerLeft(ulong playerOwnerClientID)
         {
-            if (_instance._playerCards.TryGetValue(playerID, out PlayerCardManager playerCard))
+            if (_instance._playerCards.TryGetValue(playerOwnerClientID, out PlayerCardManager playerCard))
             {
                 Destroy(playerCard.gameObject);
-                _instance._playerCards.Remove(playerID);
+                _instance._playerCards.Remove(playerOwnerClientID);
             }
         }
 
-        public static void SetDeaths(ulong playerID, int deaths)
+        public static void SetDeaths(ulong playerOwnerClientID, int deaths)
         {
             if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
             {
-                _instance.SetDeathsServerRpc(playerID, deaths);
+                _instance.SetDeathsServerRpc(playerOwnerClientID, deaths);
             }
             else
             {
-                _instance.SetDeathsInternal(playerID, deaths);
+                _instance.SetDeathsInternal(playerOwnerClientID, deaths);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void SetDeathsServerRpc(ulong playerID, int deaths)
+        private void SetDeathsServerRpc(ulong playerOwnerClientID, int deaths)
         {
-            SetDeathsClientRpc(playerID, deaths);
-            SetDeathsInternal(playerID, deaths);
+            SetDeathsClientRpc(playerOwnerClientID, deaths);
+            SetDeathsInternal(playerOwnerClientID, deaths);
         }
 
         [ClientRpc]
-        private void SetDeathsClientRpc(ulong playerID, int deaths)
+        private void SetDeathsClientRpc(ulong playerOwnerClientID, int deaths)
         {
-            SetDeathsInternal(playerID, deaths);
+            SetDeathsInternal(playerOwnerClientID, deaths);
         }
 
         private void SetDeathsInternal(ulong playerID, int deaths)
         {
             _playerCards[playerID].SetDeaths(deaths);
         }
-        
-        public static void SetKills(ulong playerID, int kills)
+
+        public static void SetKills(ulong playerOwnerClientID, int kills)
         {
             // Client wants to request update from server
             if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
             {
-                _instance.SetKillsServerRpc(playerID, kills);
+                _instance.SetKillsServerRpc(playerOwnerClientID, kills);
             }
             else
             {
                 // If server, just apply directly
-                _instance.SetKillsInternal(playerID, kills);
+                _instance.SetKillsInternal(playerOwnerClientID, kills);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void SetKillsServerRpc(ulong playerID, int kills)
+        private void SetKillsServerRpc(ulong playerOwnerClientID, int kills)
         {
             // Update all clients
-            SetKillsClientRpc(playerID, kills);
-        
+            SetKillsClientRpc(playerOwnerClientID, kills);
+
             // Apply on server too
-            SetKillsInternal(playerID, kills);
+            SetKillsInternal(playerOwnerClientID, kills);
         }
 
         [ClientRpc]
-        private void SetKillsClientRpc(ulong playerID, int kills)
+        private void SetKillsClientRpc(ulong playerOwnerClientID, int kills)
         {
-            SetKillsInternal(playerID, kills);
+            SetKillsInternal(playerOwnerClientID, kills);
         }
 
-        private void SetKillsInternal(ulong playerID, int kills)
+        private void SetKillsInternal(ulong playerOwnerClientID, int kills)
         {
-            _playerCards[playerID].SetKills(kills);
+            _playerCards[playerOwnerClientID].SetKills(kills);
         }
-        
-        public static void SetUsername(ulong playerID, string username)
+
+        public static void SetUsername(ulong playerOwnerClientID, string username)
         {
             // Client wants to request update from server
             if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
             {
-                _instance.SetUsernameServerRpc(playerID, username);
+                _instance.SetUsernameServerRpc(playerOwnerClientID, username);
             }
             else
             {
                 // If server, just apply directly
-                _instance.SetUsernameInternal(playerID, username);
+                _instance.SetUsernameInternal(playerOwnerClientID, username);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
-        private void SetUsernameServerRpc(ulong playerID, string username)
+        private void SetUsernameServerRpc(ulong playerOwnerClientID, string username)
         {
             // Update all clients
-            SetUsernameClientRpc(playerID, username);
-        
+            SetUsernameClientRpc(playerOwnerClientID, username);
+
             // Apply on server too
-            SetUsernameInternal(playerID, username);
+            SetUsernameInternal(playerOwnerClientID, username);
         }
 
         [ClientRpc]
-        private void SetUsernameClientRpc(ulong playerID, string username)
+        private void SetUsernameClientRpc(ulong playerOwnerClientID, string username)
         {
-            SetUsernameInternal(playerID, username);
+            SetUsernameInternal(playerOwnerClientID, username);
         }
 
-        private void SetUsernameInternal(ulong playerID, string username)
+        private void SetUsernameInternal(ulong playerOwnerClientID, string username)
         {
-            _playerCards[playerID].SetUsername(username);
+            _playerCards[playerOwnerClientID].SetUsername(username);
         }
     }
 }
