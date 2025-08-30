@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using Main.Scripts.Game_Managers;
 using Main.Scripts.UI_Scripts;
+using Main.Scripts.Utilities;
 using Main.Scripts.World_Objects;
 using Unity.Collections;
 using UnityEngine.SocialPlatforms.Impl;
@@ -20,6 +21,7 @@ namespace Main.Scripts.Player
         );
         public NetworkVariable<int> playerKills = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         public NetworkVariable<int> playerDeaths = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        public NetworkVariable<int> playerScore = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
         
         public float maxHealth = 100f;
         public float playerHeath;
@@ -56,12 +58,13 @@ namespace Main.Scripts.Player
             }
             if (IsOwner)
             {
-                username.Value = NetworkUIManager.LocalPlayerUsername; 
+                username.Value = MainMenuManager.LocalPlayerUsername; 
             }
             ScoreboardManager.PlayerJoined(OwnerClientId, username.Value.ToString());
             playerKills.OnValueChanged += UpdateScoreBoardKills;
             playerDeaths.OnValueChanged += UpdateScoreBoardDeaths;
             username.OnValueChanged += UpdateScoreBoardUsername;
+            playerScore.OnValueChanged += UpdateScoreBoardScore;
         }
         
         private void Awake()
@@ -179,6 +182,7 @@ namespace Main.Scripts.Player
             spawnPointManager.RespawnPlayer(transform, requireUnique: isGameStart);
             playerRigidbody2D.interpolation = RigidbodyInterpolation2D.Interpolate;
         }
+        
         private void SetDeadCollisions(bool ignore)
         {
             for (int i = 0; i < 32; i++) // Unity supports up to 32 layers
@@ -202,11 +206,21 @@ namespace Main.Scripts.Player
             if (previousValue > newValue) Debug.LogError("Death Sync Error");
             ScoreboardManager.SetDeaths(OwnerClientId, newValue);
         }
+        private void UpdateScoreBoardScore(int previousValue, int newValue)
+        {
+            if (previousValue > newValue) Debug.LogError("Score Sync Error");
+            ScoreboardManager.SetScore(OwnerClientId, newValue);
+        }
         public void AddKill()
         {
             if (IsOwner)
             {
                 playerKills.Value += 1;
+            }
+
+            if (GameStateManager.CurrentGameMode == GameMode.Deathmatch)
+            {
+                AddScore();
             }
         }
 
@@ -215,6 +229,14 @@ namespace Main.Scripts.Player
             if (IsOwner)
             {
                 playerDeaths.Value += 1;
+            }
+        }
+
+        public void AddScore()
+        {
+            if (IsOwner)
+            {
+                playerScore.Value += 1;
             }
         }
         

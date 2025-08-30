@@ -1,7 +1,8 @@
 ﻿namespace Main.Scripts.Utilities
 {
-    public enum GameModes
+    public enum GameMode
     {
+        None,
         Deathmatch
     }
 }

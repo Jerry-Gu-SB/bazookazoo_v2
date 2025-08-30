@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace Main.Scripts.UI_Scripts
 {
-    public class NetworkUIManager : MonoBehaviour
+    public class MainMenuManager : MonoBehaviour
     {
         [Header("Connection UI Elements")]
         [SerializeField] private Button startHostButton;
@@ -25,6 +25,10 @@ namespace Main.Scripts.UI_Scripts
         [SerializeField] private TMP_Text selectMapText;
         [SerializeField] private Button dustyButton;
         [SerializeField] private Button forestButton;
+
+        [Header("Game Mode Selection UI Elements")]
+        [SerializeField] private TMP_Text gameModeText;
+        [SerializeField] private Button deathmatchButton;
         
         [Header("Public Variables")]
         public static string LocalPlayerUsername { get; private set; } = "Player";
@@ -42,18 +46,12 @@ namespace Main.Scripts.UI_Scripts
         {
             _transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
 
-            startHostButton.onClick.AddListener(StartHost);
-            startClientButton.onClick.AddListener(StartClient);
-            dustyButton.onClick.AddListener(() =>
-            {
-                GameStateManager.Instance.SetSelectedMap(MapNames.Dusty);
-                GameStateManager.Instance.TransitionToState(GameState.MapLoading);
-            });
-            forestButton.onClick.AddListener(() =>
-            {
-                GameStateManager.Instance.SetSelectedMap(MapNames.Forest);
-                GameStateManager.Instance.TransitionToState(GameState.MapLoading);
-            });
+            SetNetworkButtonListeners();
+            SetGameModeButtonListeners();
+            SetMapButtonListeners();
+            
+            ShowGameModeUI(false);
+            ShowMapSelectionUI(false);
 
             DisplayLocalIPAddress();
             HandleGameStateChanged(GameStateManager.Instance.CurrentState);
@@ -72,9 +70,51 @@ namespace Main.Scripts.UI_Scripts
         private void HandleGameStateChanged(GameState state)
         {
             ShowConnectingUI(state is GameState.Idle or GameState.Connecting);
-            ShowMapSelectionUI(state == GameState.LobbyReady);
+        }
+        
+        private void SetNetworkButtonListeners()
+        {
+            startHostButton.onClick.AddListener(StartHost);
+            startClientButton.onClick.AddListener(StartClient);
+        }
+        
+        private void SetGameModeButtonListeners()
+        {
+            deathmatchButton.onClick.AddListener(() => SetGameMode(GameMode.Deathmatch));
         }
 
+        private void SetGameMode(GameMode mode)
+        {
+            GameStateManager.Instance.SetGameModeServerRpc(mode);
+            ShowGameModeUI(false);
+            ShowMapSelectionUI(true);
+        }
+        
+        private void SetMapButtonListeners()
+        {
+            dustyButton.onClick.AddListener(() =>
+            {
+                GameStateManager.Instance.SetSelectedMap(MapNames.Dusty);
+                GameStateManager.Instance.TransitionToState(GameState.MapLoading);
+                ShowMapSelectionUI(false);
+            });
+            forestButton.onClick.AddListener(() =>
+            {
+                GameStateManager.Instance.SetSelectedMap(MapNames.Forest);
+                GameStateManager.Instance.TransitionToState(GameState.MapLoading);
+                ShowMapSelectionUI(false);
+            });
+        }
+        
+        private void StartHost()
+        {
+            ApplyConnectionData();
+            ApplyPlayerUsername();
+            NetworkManager.Singleton.StartHost();
+            GameStateManager.Instance.TransitionToState(GameState.LobbyLoading);
+            ShowGameModeUI(true);
+        }
+        
         private void StartClient()
         {
             ApplyConnectionData();
@@ -83,14 +123,7 @@ namespace Main.Scripts.UI_Scripts
             GameStateManager.Instance.TransitionToState(GameState.Connecting);
             ShowConnectingUI(false);
             ShowMapSelectionUI(false);
-        }
-
-        private void StartHost()
-        {
-            ApplyConnectionData();
-            ApplyPlayerUsername();
-            NetworkManager.Singleton.StartHost();
-            GameStateManager.Instance.TransitionToState(GameState.LobbyLoading);
+            ShowGameModeUI(false);
         }
 
         private void ApplyConnectionData()
@@ -115,6 +148,12 @@ namespace Main.Scripts.UI_Scripts
             portInputField.gameObject.SetActive(show);
             localIPDisplayText.gameObject.SetActive(show);
             usernameInputField.gameObject.SetActive(show);
+        }
+
+        private void ShowGameModeUI(bool show)
+        {
+            gameModeText.gameObject.SetActive(show);
+            deathmatchButton.gameObject.SetActive(show);
         }
 
         private void ShowMapSelectionUI(bool show)

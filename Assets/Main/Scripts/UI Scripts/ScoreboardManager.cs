@@ -75,6 +75,36 @@ namespace Main.Scripts.UI_Scripts
             }
         }
 
+        public static void SetScore(ulong playerOwnerClientID, int score)
+        {
+            if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
+            {
+                _instance.SetScoreServerRpc(playerOwnerClientID, score);
+            }
+            else
+            {
+                _instance.SetScoreInternal(playerOwnerClientID, score);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void SetScoreServerRpc(ulong playerOwnerClientID, int score)
+        {
+            SetScoreClientRpc(playerOwnerClientID, score);
+            SetScoreInternal(playerOwnerClientID, score);
+        }
+
+        [ClientRpc]
+        private void SetScoreClientRpc(ulong playerOwnerClientID, int score)
+        {
+            SetScoreInternal(playerOwnerClientID, score);
+        }
+
+        private void SetScoreInternal(ulong playerID, int score)
+        {
+            _playerCards[playerID].SetScore(score);
+        }
+        
         public static void SetDeaths(ulong playerOwnerClientID, int deaths)
         {
             if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)

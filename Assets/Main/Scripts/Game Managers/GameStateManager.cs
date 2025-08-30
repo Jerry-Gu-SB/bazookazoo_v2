@@ -19,25 +19,36 @@ namespace Main.Scripts.Game_Managers
 
     public class GameStateManager : NetworkBehaviour
     {
-        public static GameStateManager Instance { get; private set; }
+        [SerializeField] 
+        private SceneLoadingManager sceneLoader;
 
+        public static GameMode CurrentGameMode { get; private set; }
+        // Networked variable (syncs across server and clients)
+        private readonly NetworkVariable<GameMode> _networkedGameMode = new(
+            GameMode.None, 
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Server
+        );
+
+        public static GameStateManager Instance { get; private set; }
+        public GameState CurrentState { get; private set; } = GameState.Idle;
         public static event Action<GameState> GameStateChanged;
 
-        [SerializeField] private SceneLoadingManager sceneLoader;
         private string _selectedMap = MapNames.Lobby;
-
-        public GameState CurrentState { get; private set; } = GameState.Idle;
-        
         private readonly NetworkVariable<GameState> _networkedGameState = new(
             GameState.Idle,
             NetworkVariableReadPermission.Everyone,
             NetworkVariableWritePermission.Server
         );
+        
         public override void OnNetworkSpawn()
         {
             if (!IsClient) return;
             _networkedGameState.OnValueChanged += OnGameStateChanged;   
             OnGameStateChanged(GameState.Idle, _networkedGameState.Value); // Catch up to current state
+            _networkedGameMode.OnValueChanged += OnGameModeChanged;
+            // Initialize static value for new clients
+            CurrentGameMode = _networkedGameMode.Value;
         }
 
         private void Awake()
@@ -85,7 +96,17 @@ namespace Main.Scripts.Game_Managers
             GameStateChanged?.Invoke(newState);
         }
 
-
+        private void OnGameModeChanged(GameMode oldMode, GameMode newMode)
+        {
+            CurrentGameMode = newMode;
+        }
+        [ServerRpc(RequireOwnership = false)]
+        public void SetGameModeServerRpc(GameMode newMode)
+        {
+            if (!IsServer) return;
+            _networkedGameMode.Value = newMode;
+        }
+        
         private void HandleState(GameState state)
         {
             switch (state)

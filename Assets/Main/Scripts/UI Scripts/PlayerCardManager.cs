@@ -34,6 +34,10 @@ namespace Main.Scripts.UI_Scripts
             playerUsername.text = username;
         }
 
+        public void SetScore(int score)
+        {
+            playerScore.text = score.ToString();
+        }
         public int GetScore()
         {
             return int.Parse(playerScore.text);
