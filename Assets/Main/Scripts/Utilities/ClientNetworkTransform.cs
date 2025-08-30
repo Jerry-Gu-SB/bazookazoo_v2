@@ -1,6 +1,6 @@
 using Unity.Netcode.Components;
 
-namespace Main.Scripts
+namespace Main.Scripts.Utilities
 {
     public class ClientNetworkTransform : NetworkTransform
     {

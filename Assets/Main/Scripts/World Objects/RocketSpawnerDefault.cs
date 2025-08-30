@@ -1,5 +1,6 @@
 using System;
 using Main.Scripts.Player;
+using Main.Scripts.Utilities;
 using UnityEngine;
 
 namespace Main.Scripts.World_Objects

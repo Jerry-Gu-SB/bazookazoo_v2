@@ -1,7 +1,7 @@
 ﻿namespace Main.Scripts.Utilities
 {
-    public enum BazookaTypes
+    public enum GameModes
     {
-        Default
+        
     }
 }

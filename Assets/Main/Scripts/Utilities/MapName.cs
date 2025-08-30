@@ -1,4 +1,4 @@
-namespace Main.Scripts
+namespace Main.Scripts.Utilities
 {
     public static class MapNames
     {
