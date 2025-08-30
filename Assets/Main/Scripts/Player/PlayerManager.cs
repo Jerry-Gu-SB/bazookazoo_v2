@@ -210,7 +210,7 @@ namespace Main.Scripts.Player
             }
         }
 
-        public void AddDeath()
+        private void AddDeath()
         {
             if (IsOwner)
             {
