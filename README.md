@@ -12,6 +12,7 @@ Features to implement:
   - ~~give player a couple seconds of invincibility on spawn~~
 - win conditions
   - ~~Players can get score upon kill~~
+  - Variable score system
   - First to X kills
   - ~~scoreboard~~
 - map design
