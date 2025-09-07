@@ -1164,6 +1164,8 @@ MonoBehaviour:
     m_InternalValue: 0
   playerDeaths:
     m_InternalValue: 0
+  playerScore:
+    m_InternalValue: 0
   maxHealth: 100
   playerHeath: 100
   isDead: 0
@@ -1186,6 +1188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cebf9ba291bcf334e968266db5c4147a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   moveForce: 30
   maxControlSpeed: 10
   controlInAirMultiplier: 0.75
@@ -1194,6 +1197,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   playerManager: {fileID: 8353948206212510349}
+  reconciliationThreshold: 10
 --- !u!114 &-5405329769026983755
 MonoBehaviour:
   m_ObjectHideFlags: 0
