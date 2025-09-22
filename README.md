@@ -1,5 +1,6 @@
 # THIS REPO IS BEING REWRITTEN (again): See https://github.com/Jerry-Gu-SB/bazookazoo_v3
 # Bazookazoo
+Version 1: https://github.com/Jerry-Gu-SB/bazookazoo-PROTOTYPE/tree/main
 
 ## Features to implement:
 
