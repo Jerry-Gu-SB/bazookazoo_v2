@@ -1,3 +1,4 @@
+# THIS REPO IS BEING REWRITTEN (again): See https://github.com/Jerry-Gu-SB/bazookazoo_v3
 # Bazookazoo
 
 ## Features to implement:
